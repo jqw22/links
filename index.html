@@ -130,7 +130,7 @@
       <label for="link-title">Title</label>
       <input type="text" id="link-title" placeholder="e.g. Example Site">
       <label for="link-url">URL</label>
-      <input type="url" id="link-url" placeholder="https://example.com">
+      <input type="url" id="link-url" placeholder="https://example.com" value="https://">
       <label for="link-category">Category</label>
       <select id="link-category"></select>
       <button id="btn-add">Add Link</button>
@@ -402,7 +402,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     addLink(title, url, cat);
     document.getElementById("link-title").value = "";
-    document.getElementById("link-url").value = "";
+    document.getElementById("link-url").value = "https://";
   });
 
   // Submit on Enter in URL field
