@@ -310,39 +310,31 @@ function deleteLink(index) {
 function render() {
   const links = loadLinks();
 
-  // Group by category
-  const grouped = {};
-  for (const cat of CATEGORY_ORDER) {
-    grouped[cat] = links.filter(l => l.category === cat);
-  }
-
   // Build TOC
   const tocList = document.getElementById("toc-list");
   tocList.innerHTML = CATEGORY_ORDER
     .map(cat => `<li><a href="#${encodeURIComponent(cat)}">${escHtml(cat)}</a></li>`)
     .join("");
 
-  // Build links HTML
+  // Build links HTML using real array indices
   const container = document.getElementById("links-container");
   let html = "";
-  let globalIdx = 0;
-  const idxByCategory = {};
 
   for (const cat of CATEGORY_ORDER) {
-    const catLinks = grouped[cat];
     html += `<h5 id="${encodeURIComponent(cat)}">${escHtml(cat)}</h5>\n`;
+
+    const catLinks = links
+      .map((link, idx) => ({ link, idx }))
+      .filter(({ link }) => link.category === cat);
 
     if (catLinks.length === 0) {
       html += `<p class="empty-category">No links yet.</p>\n`;
     } else {
-      idxByCategory[cat] = [];
-      for (const link of catLinks) {
-        idxByCategory[cat].push(globalIdx);
+      for (const { link, idx } of catLinks) {
         html += `<span class="link-row">`;
         html += `<a href="${escAttr(link.url)}" target="_blank">${escHtml(link.title)}</a>`;
-        html += `<button class="del-btn" data-idx="${globalIdx}" title="Remove">&times;</button>`;
+        html += `<button class="del-btn" data-idx="${idx}" title="Remove">&times;</button>`;
         html += `</span><br>\n`;
-        globalIdx++;
       }
     }
   }
