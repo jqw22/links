@@ -93,8 +93,22 @@
       background: #e4e4e4;
     }
 
+    /* Sync status indicator */
+    #sync-status {
+      display: inline-block;
+      font-size: 0.8em;
+      margin-left: 10px;
+      vertical-align: middle;
+    }
+    #sync-status.synced { color: #2a8; }
+    #sync-status.local { color: #999; }
+    #sync-status.error { color: #c66; }
+
     /* Hide edit UI by default */
     .edit-ui { display: none; }
+    body.editing .edit-ui { display: block; }
+    body.editing .link-row .del-btn { display: inline-block; }
+    .link-row .del-btn { display: none; }
     body.editing .edit-ui { display: block; }
     body.editing .link-row .del-btn { display: inline-block; }
     .link-row .del-btn { display: none; }
@@ -123,6 +137,7 @@
     <h4 id="Links">Links</h4>
 
     <button id="toggle-edit">Edit Links</button>
+    <span id="sync-status"></span>
 
     <div id="add-link-form" class="edit-ui">
       <h5>Add a Link</h5>
@@ -276,8 +291,107 @@ const CATEGORY_ORDER = [
 
 const STORAGE_KEY = "links_data";
 
-// ===== Load links from localStorage or use defaults =====
-function loadLinks() {
+// ===== Nostr sync =====
+const NOSTR_KIND = 30078;
+const NOSTR_D_TAG = "links-page";
+const RELAYS = [
+  "wss://relay.damus.io",
+  "wss://nos.lol",
+  "wss://relay.primal.net"
+];
+
+let nostrPubkey = null;    // set once we detect a NIP-07 extension
+
+function hasNostr() {
+  return !!(window.nostr && window.nostr.getPublicKey);
+}
+
+function nostrEventFromLinks(links) {
+  return {
+    kind: NOSTR_KIND,
+    content: JSON.stringify(links),
+    tags: [["d", NOSTR_D_TAG]],
+    created_at: Math.floor(Date.now() / 1000),
+    pubkey: nostrPubkey
+  };
+}
+
+function publishToRelay(relayUrl, event) {
+  return new Promise((resolve, reject) => {
+    const ws = new WebSocket(relayUrl);
+    const timeout = setTimeout(() => { ws.close(); reject(new Error("timeout")); }, 8000);
+    ws.onopen = () => {
+      ws.send(JSON.stringify(["EVENT", event]));
+      // Wait briefly for OK, but don't block on it
+      setTimeout(() => { clearTimeout(timeout); ws.close(); resolve(); }, 1000);
+    };
+    ws.onerror = () => { clearTimeout(timeout); reject(new Error("ws error")); };
+  });
+}
+
+async function nostrPublish(links) {
+  if (!nostrPubkey) return;
+  const unsigned = nostrEventFromLinks(links);
+  try {
+    const signed = await window.nostr.signEvent(unsigned);
+    // Fire-and-forget to all relays
+    for (const relay of RELAYS) {
+      publishToRelay(relay, signed).catch(() => {});
+    }
+  } catch (e) {
+    console.warn("Nostr publish failed:", e);
+  }
+}
+
+async function nostrFetch() {
+  if (!nostrPubkey) return null;
+
+  const filter = {
+    kinds: [NOSTR_KIND],
+    authors: [nostrPubkey],
+    "#d": [NOSTR_D_TAG],
+    limit: 1
+  };
+
+  // Try relays sequentially, return first result
+  for (const relayUrl of RELAYS) {
+    try {
+      const events = await fetchFromRelay(relayUrl, filter);
+      if (events.length > 0) {
+        try {
+          return JSON.parse(events[0].content);
+        } catch (e) { /* skip malformed */ }
+      }
+    } catch (e) { /* try next relay */ }
+  }
+  return null;
+}
+
+function fetchFromRelay(relayUrl, filter) {
+  return new Promise((resolve, reject) => {
+    const ws = new WebSocket(relayUrl);
+    const events = [];
+    const timeout = setTimeout(() => { ws.close(); resolve(events); }, 6000);
+    ws.onopen = () => {
+      ws.send(JSON.stringify(["REQ", "links-fetch", filter]));
+    };
+    ws.onmessage = (msg) => {
+      const [type, subId, event] = JSON.parse(msg.data);
+      if (type === "EVENT" && subId === "links-fetch") {
+        events.push(event);
+      }
+      if (type === "EOSE" && subId === "links-fetch") {
+        clearTimeout(timeout);
+        ws.close();
+        resolve(events);
+      }
+    };
+    ws.onerror = () => { clearTimeout(timeout); resolve(events); };
+  });
+}
+
+// ===== localStorage fallback =====
+function loadLinksLocal() {
   const stored = localStorage.getItem(STORAGE_KEY);
   if (stored) {
     try { return JSON.parse(stored); } catch (e) { /* fall through */ }
@@ -285,29 +399,54 @@ function loadLinks() {
   return DEFAULT_LINKS.map(l => ({ ...l }));
 }
 
-function saveLinks(links) {
+function saveLinksLocal(links) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(links));
 }
 
+// ===== Unified load/save =====
+async function loadLinks() {
+  if (hasNostr()) {
+    try {
+      nostrPubkey = await window.nostr.getPublicKey();
+      const remote = await nostrFetch();
+      if (remote && Array.isArray(remote) && remote.length > 0) {
+        saveLinksLocal(remote);  // cache locally
+        return remote;
+      }
+    } catch (e) {
+      console.warn("Nostr fetch failed, using local:", e);
+    }
+  }
+  return loadLinksLocal();
+}
+
+async function saveLinks(links) {
+  saveLinksLocal(links);
+  nostrPublish(links);  // fire-and-forget
+}
+
 // ===== Add a link =====
-function addLink(title, url, category) {
-  const links = loadLinks();
+async function addLink(title, url, category) {
+  const links = await loadLinks();
   links.push({ title: title.trim(), url: url.trim(), category });
-  saveLinks(links);
-  render();
+  await saveLinks(links);
+  await render();
 }
 
 // ===== Delete a link =====
-function deleteLink(index) {
-  const links = loadLinks();
+async function deleteLink(index) {
+  const links = await loadLinks();
   links.splice(index, 1);
-  saveLinks(links);
-  render();
+  await saveLinks(links);
+  await render();
 }
 
 // ===== Render everything =====
-function render() {
-  const links = loadLinks();
+async function render() {
+  let links = await loadLinks();
+  if (!links || typeof links.map !== "function") {
+    links = DEFAULT_LINKS.map(l => ({ ...l }));
+  }
 
   // Build TOC
   const tocList = document.getElementById("toc-list");
@@ -366,8 +505,24 @@ function escAttr(s) {
 }
 
 // ===== Init =====
-document.addEventListener("DOMContentLoaded", () => {
-  render();
+document.addEventListener("DOMContentLoaded", async () => {
+  // Set sync status
+  const statusEl = document.getElementById("sync-status");
+  if (hasNostr()) {
+    try {
+      nostrPubkey = await window.nostr.getPublicKey();
+      statusEl.textContent = "\u25C6 Nostr synced";
+      statusEl.className = "synced";
+    } catch (e) {
+      statusEl.textContent = "\u25C7 local only";
+      statusEl.className = "local";
+    }
+  } else {
+    statusEl.textContent = "\u25C7 local only";
+    statusEl.className = "local";
+  }
+
+  await render();
 
   // Toggle edit mode
   const toggleBtn = document.getElementById("toggle-edit");
