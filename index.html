@@ -106,6 +106,23 @@
       font-style: italic;
       font-size: 0.9em;
     }
+
+    /* Export/Import buttons */
+    #io-buttons {
+      margin-bottom: 12px;
+      display: none;
+    }
+    body.editing #io-buttons { display: block; }
+    #io-buttons button {
+      padding: 4px 10px;
+      background: #f0f0f0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.8em;
+      margin-right: 6px;
+    }
+    #io-buttons button:hover { background: #e4e4e4; }
   </style>
 </head>
 <body class="stackedit">
@@ -124,6 +141,12 @@
     <h4 id="Links">Links</h4>
 
     <button id="toggle-edit">Edit Links</button>
+
+    <div id="io-buttons" class="edit-ui">
+      <button id="btn-export" title="Download all links as links.json">Export JSON</button>
+      <button id="btn-import" title="Replace links with a links.json file">Import JSON</button>
+      <input type="file" id="import-file" accept=".json" style="display:none">
+    </div>
 
     <div id="add-link-form" class="edit-ui">
       <h5>Add a Link</h5>
@@ -146,171 +169,213 @@
 <footer></footer>
 
 <script>
-// ===== Default links (first-time visitors) =====
+// ===== Default links (hardcoded fallback) =====
 const DEFAULT_LINKS = [
-  { title: "jamesdewhurst.uk",         url: "http://www.jamesdewhurst.uk",                   category: "Links" },
-  { title: "Dance videos",             url: "https://jqw22.github.io/dance/",               category: "Links" },
-  { title: "Jung Research App",        url: "https://jqw22.github.io/cwtext2/",             category: "Links" },
-  { title: "Notebook App",             url: "https://jqw22.github.io/notebook/",            category: "Links" },
-  { title: "Ecosia Search",            url: "https://www.ecosia.org",                        category: "Links" },
-  { title: "REM email",                url: "https://login.microsoftonline.com",             category: "Links" },
-  { title: "Google Maps",              url: "https://www.google.com/maps",                  category: "Links" },
-  { title: "Three Rings",              url: "https://www.3r.org.uk/auth",                   category: "Links" },
-
-  { title: "BBC Sport",                url: "https://www.bbc.co.uk/sport",                  category: "Media / Entertainment" },
-  { title: "Youtube",                  url: "https://www.youtube.com",                       category: "Media / Entertainment" },
-  { title: "LOL",                      url: "https://eu.lolesports.com",                     category: "Media / Entertainment" },
-
-  { title: "Apple icloud",             url: "https://www.icloud.com",                        category: "Webapps" },
-  { title: "iLovePDF",                 url: "https://www.ilovepdf.com",                      category: "Webapps" },
-  { title: "DrawIO",                   url: "https://www.drawio.com",                        category: "Webapps" },
-  { title: "OneDrive",                 url: "https://onedrive.live.com",                     category: "Webapps" },
-  { title: "Proton Drive",             url: "https://drive.proton.me",                       category: "Webapps" },
-  { title: "Standard Notes",           url: "https://app.standardnotes.com",                 category: "Webapps" },
-  { title: "Family Search",            url: "https://ident.familysearch.org/identity/login/?state=https://www.familysearch.org/en/united-kingdom/", category: "Webapps" },
-  { title: "Spotify",                  url: "https://open.spotify.com",                      category: "Webapps" },
-  { title: "Incogni",                  url: "https://incogni.com/auth/login",                category: "Webapps" },
-  { title: "Archive Books",            url: "https://archive.org",                           category: "Webapps" },
-
-  { title: "Nostr",                    url: "https://nostr.com",                             category: "Nostr" },
-  { title: "Nostrplebs",              url: "https://nostrplebs.com",                         category: "Nostr" },
-  { title: "Bookstr",                  url: "https://bookstr.xyz",                           category: "Nostr" },
-
-  { title: "Amazon",                   url: "https://www.amazon.co.uk",                      category: "Shopping" },
-  { title: "Wood Supplier - Lekto",    url: "https://www.lektowoodfuels.co.uk/",             category: "Shopping" },
-  { title: "Tea Shop",                url: "https://www.exoticteapot.co.uk",                 category: "Shopping" },
-  { title: "Nespresso",               url: "https://www.nespresso.com/uk/en",               category: "Shopping" },
-  { title: "Classic Tools",           url: "https://www.classichandtools.com",              category: "Shopping" },
-  { title: "Honest Grapes",           url: "https://www.honestgrapes.co.uk/account/login?return_url=%2Faccount", category: "Shopping" },
-  { title: "Putnams",                  url: "https://putnams.co.uk",                          category: "Shopping" },
-  { title: "Coal shop",               url: "https://supaheatfuels.co.uk",                    category: "Shopping" },
-
-  { title: "Google Flights",           url: "https://www.google.com/travel",                  category: "Travel" },
-  { title: "Seat Spy",                url: "https://www.seatspy.com",                        category: "Travel" },
-  { title: "Airbnb",                   url: "https://www.airbnb.co.uk",                       category: "Travel" },
-  { title: "Booking.com",             url: "https://www.booking.com",                        category: "Travel" },
-  { title: "Easyjet",                 url: "https://www.easyjet.com/en",                     category: "Travel" },
-  { title: "Ryanair",                  url: "https://www.ryanair.com",                        category: "Travel" },
-  { title: "Flight Radar",            url: "https://www.flightradar24.com",                  category: "Travel" },
-  { title: "Trainline",               url: "https://www.thetrainline.com",                   category: "Travel" },
+  { title: "jamesdewhurst.uk", url: "http://www.jamesdewhurst.uk", category: "Links" },
+  { title: "Dance videos", url: "https://jqw22.github.io/dance/", category: "Links" },
+  { title: "Jung Research App", url: "https://jqw22.github.io/cwtext2/", category: "Links" },
+  { title: "Notebook App", url: "https://jqw22.github.io/notebook/", category: "Links" },
+  { title: "Ecosia Search", url: "https://www.ecosia.org", category: "Links" },
+  { title: "REM email", url: "https://login.microsoftonline.com", category: "Links" },
+  { title: "Google Maps", url: "https://www.google.com/maps", category: "Links" },
+  { title: "Three Rings", url: "https://www.3r.org.uk/auth", category: "Links" },
+  { title: "BBC Sport", url: "https://www.bbc.co.uk/sport", category: "Media / Entertainment" },
+  { title: "Youtube", url: "https://www.youtube.com", category: "Media / Entertainment" },
+  { title: "LOL", url: "https://eu.lolesports.com", category: "Media / Entertainment" },
+  { title: "Apple icloud", url: "https://www.icloud.com", category: "Webapps" },
+  { title: "iLovePDF", url: "https://www.ilovepdf.com", category: "Webapps" },
+  { title: "DrawIO", url: "https://www.drawio.com", category: "Webapps" },
+  { title: "OneDrive", url: "https://onedrive.live.com", category: "Webapps" },
+  { title: "Proton Drive", url: "https://drive.proton.me", category: "Webapps" },
+  { title: "Standard Notes", url: "https://app.standardnotes.com", category: "Webapps" },
+  { title: "Family Search", url: "https://ident.familysearch.org/identity/login/?state=https://www.familysearch.org/en/united-kingdom/", category: "Webapps" },
+  { title: "Spotify", url: "https://open.spotify.com", category: "Webapps" },
+  { title: "Incogni", url: "https://incogni.com/auth/login", category: "Webapps" },
+  { title: "Archive Books", url: "https://archive.org", category: "Webapps" },
+  { title: "Nostr", url: "https://nostr.com", category: "Nostr" },
+  { title: "Nostrplebs", url: "https://nostrplebs.com", category: "Nostr" },
+  { title: "Bookstr", url: "https://bookstr.xyz", category: "Nostr" },
+  { title: "Amazon", url: "https://www.amazon.co.uk", category: "Shopping" },
+  { title: "Wood Supplier - Lekto", url: "https://www.lektowoodfuels.co.uk/", category: "Shopping" },
+  { title: "Tea Shop", url: "https://www.exoticteapot.co.uk", category: "Shopping" },
+  { title: "Nespresso", url: "https://www.nespresso.com/uk/en", category: "Shopping" },
+  { title: "Classic Tools", url: "https://www.classichandtools.com", category: "Shopping" },
+  { title: "Honest Grapes", url: "https://www.honestgrapes.co.uk/account/login?return_url=%2Faccount", category: "Shopping" },
+  { title: "Putnams", url: "https://putnams.co.uk", category: "Shopping" },
+  { title: "Coal shop", url: "https://supaheatfuels.co.uk", category: "Shopping" },
+  { title: "Google Flights", url: "https://www.google.com/travel", category: "Travel" },
+  { title: "Seat Spy", url: "https://www.seatspy.com", category: "Travel" },
+  { title: "Airbnb", url: "https://www.airbnb.co.uk", category: "Travel" },
+  { title: "Booking.com", url: "https://www.booking.com", category: "Travel" },
+  { title: "Easyjet", url: "https://www.easyjet.com/en", category: "Travel" },
+  { title: "Ryanair", url: "https://www.ryanair.com", category: "Travel" },
+  { title: "Flight Radar", url: "https://www.flightradar24.com", category: "Travel" },
+  { title: "Trainline", url: "https://www.thetrainline.com", category: "Travel" },
   { title: "Manchester Airport Parking", url: "https://www.manchesterairport.co.uk/booking", category: "Travel" },
-  { title: "BA.com",                   url: "https://www.ba.com",                             category: "Travel" },
-  { title: "Holiday Cottages",        url: "https://www.cottages.com",                       category: "Travel" },
-  { title: "Enterprise Car Hire",     url: "https://www.enterprise.co.uk/en",                category: "Travel" },
-  { title: "With Locals",             url: "https://www.withlocals.com",                     category: "Travel" },
-  { title: "British Pilgrimages",     url: "https://www.britishpilgrimage.org",             category: "Travel" },
-  { title: "Unique Home Stays cottages", url: "https://www.uniquehomestays.com",            category: "Travel" },
-  { title: "Olhao Convento",          url: "https://www.conventoolhao.com/book",            category: "Travel" },
-  { title: "Olhao Appartments",       url: "https://www.whiteterraces.com",                  category: "Travel" },
-  { title: "i-escape",                url: "https://www.i-escape.com",                       category: "Travel" },
-  { title: "Sawdays",                  url: "https://www.sawdays.co.uk",                       category: "Travel" },
-
-  { title: "HL",                       url: "https://www.hl.co.uk/shares",                    category: "Finance" },
-  { title: "Interactive Brokers",     url: "https://www.interactivebrokers.co.uk/portal/#/dashboard/positions", category: "Finance" },
-  { title: "Bonner PR",               url: "https://www.bonnerprivateresearch.com",          category: "Finance" },
-  { title: "Chards",                   url: "https://www.chards.co.uk",                        category: "Finance" },
-  { title: "Bytetree",                url: "https://www.bytetree.com/the-multi-asset-investor", category: "Finance" },
-  { title: "Epsilon Theory",          url: "https://www.epsilontheory.com",                  category: "Finance" },
-  { title: "Southbank",               url: "https://www.southbankresearch.com",              category: "Finance" },
-  { title: "Myrmikan",                url: "http://www.myrmikan.com/port",                   category: "Finance" },
-  { title: "Famers Fable",            url: "https://www.farmersfable.org",                   category: "Finance" },
-  { title: "Naval",                    url: "https://nav.al",                                 category: "Finance" },
-  { title: "Taleb",                    url: "https://fooledbyrandomness.com",                 category: "Finance" },
-  { title: "Halifax",                  url: "https://share-dealing.halifaxsharedealing-online.co.uk", category: "Finance" },
-  { title: "Blockchain Site",         url: "https://andersbrownworth.com/blockchain",       category: "Finance" },
-  { title: "Coinbase",                url: "https://www.coinbase.com/en-gb/explore",         category: "Finance" },
-
-  { title: "Bank",                     url: "http://www1.firstdirect.com",                    category: "Banking & Insurance" },
-  { title: "Teachers Pension",         url: "https://www.teacherspensions.co.uk/members/member-login.aspx", category: "Banking & Insurance" },
-  { title: "Churchill Insurance",     url: "https://www.churchill.com",                      category: "Banking & Insurance" },
-  { title: "Admiral Insurance",       url: "https://www.admiral.com",                        category: "Banking & Insurance" },
-  { title: "Aviva Insurance",         url: "https://www.aviva.co.uk",                        category: "Banking & Insurance" },
-  { title: "Hire Car Excess Insurance", url: "https://www.carhireexcess.com",                category: "Banking & Insurance" },
-  { title: "ripe - Dinghy Insurance", url: "https://www.ripeinsurance.co.uk/login",          category: "Banking & Insurance" },
-
-  { title: "Gov.uk",                   url: "https://www.access.service.gov.uk/login/signin/creds", category: "Gov" },
-  { title: "Student Finance",         url: "https://logon.slc.co.uk/welcome/secured/login?_locale=en_GB&cookieConsent=accept", category: "Gov" },
-  { title: "Teacher Pensions",        url: "https://www.teacherspensions.co.uk/members/member-login.aspx", category: "Gov" },
-  { title: "HM Land Registry",        url: "https://propertyalert.landregistry.gov.uk/propertyalert/myalerts/entry?SignIn=Sign+in", category: "Gov" },
-
-  { title: "Lebara Mobiles",          url: "https://www.lebara.co.uk/en/home.html",           category: "Home / Utilities" },
-  { title: "BT Broadband",            url: "https://www.BT.com",                              category: "Home / Utilities" },
-  { title: "TV License",              url: "https://www.tvlicensing.co.uk/yourlicense",      category: "Home / Utilities" },
-  { title: "Octopus Energy",          url: "https://octopus.energy",                          category: "Home / Utilities" },
-
-  { title: "Fasthosts login",         url: "https://admin.fasthosts.co.uk",                   category: "Photography" },
-  { title: "Simlab Photos",           url: "https://www.simlab.co.uk",                        category: "Photography" },
-  { title: "X-T4 Manual",             url: "https://fujifilm-dsc.com/en/manual/x-t4",        category: "Photography" },
-  { title: "Wordpress",               url: "https://wordpress.com/log-in/",                   category: "Photography" },
-  { title: "Craig Roberts Photography", url: "https://craigrobertsphotography.co.uk",         category: "Photography" },
-
-  { title: "Cecile Buckenmeyer",      url: "https://www.cecilebuckenmeyer.co.uk",            category: "Jung" },
-  { title: "Jung Institute",          url: "https://www.junginstitut.ch/en",                 category: "Jung" },
-  { title: "Carl Chapman",            url: "https://www.carlchapman.co.uk",                  category: "Jung" },
-  { title: "Mark Saban",              url: "http://www.marksaban.co.uk/index.html",          category: "Jung" },
-  { title: "igap",                     url: "https://www.igap.co.uk",                          category: "Jung" },
-  { title: "Speaking of Jung",        url: "https://speakingofjung.com",                      category: "Jung" },
-
-  { title: "Doctor",                   url: "https://www.thependlemedicalpartnership.nhs.uk", category: "Health" },
-  { title: "PSA Test",                url: "https://bkpca.mypsatests.org.uk/Login",          category: "Health" },
-  { title: "Physio",                   url: "https://www.theperformance-lab.co.uk",            category: "Health" },
-  { title: "Food for the brain",      url: "https://foodforthebrain.org",                     category: "Health" },
-  { title: "Cholesterol Converter",   url: "https://www.omnicalculator.com/health/cholesterol-units", category: "Health" },
-  { title: "Suppliments - Royal Oak", url: "https://royaloakhealth.co.uk",                    category: "Health" }
+  { title: "BA.com", url: "https://www.ba.com", category: "Travel" },
+  { title: "Holiday Cottages", url: "https://www.cottages.com", category: "Travel" },
+  { title: "Enterprise Car Hire", url: "https://www.enterprise.co.uk/en", category: "Travel" },
+  { title: "With Locals", url: "https://www.withlocals.com", category: "Travel" },
+  { title: "British Pilgrimages", url: "https://www.britishpilgrimage.org", category: "Travel" },
+  { title: "Unique Home Stays cottages", url: "https://www.uniquehomestays.com", category: "Travel" },
+  { title: "Olhao Convento", url: "https://www.conventoolhao.com/book", category: "Travel" },
+  { title: "Olhao Appartments", url: "https://www.whiteterraces.com", category: "Travel" },
+  { title: "i-escape", url: "https://www.i-escape.com", category: "Travel" },
+  { title: "Sawdays", url: "https://www.sawdays.co.uk", category: "Travel" },
+  { title: "HL", url: "https://www.hl.co.uk/shares", category: "Finance" },
+  { title: "Interactive Brokers", url: "https://www.interactivebrokers.co.uk/portal/#/dashboard/positions", category: "Finance" },
+  { title: "Bonner PR", url: "https://www.bonnerprivateresearch.com", category: "Finance" },
+  { title: "Chards", url: "https://www.chards.co.uk", category: "Finance" },
+  { title: "Bytetree", url: "https://www.bytetree.com/the-multi-asset-investor", category: "Finance" },
+  { title: "Epsilon Theory", url: "https://www.epsilontheory.com", category: "Finance" },
+  { title: "Southbank", url: "https://www.southbankresearch.com", category: "Finance" },
+  { title: "Myrmikan", url: "http://www.myrmikan.com/port", category: "Finance" },
+  { title: "Famers Fable", url: "https://www.farmersfable.org", category: "Finance" },
+  { title: "Naval", url: "https://nav.al", category: "Finance" },
+  { title: "Taleb", url: "https://fooledbyrandomness.com", category: "Finance" },
+  { title: "Halifax", url: "https://share-dealing.halifaxsharedealing-online.co.uk", category: "Finance" },
+  { title: "Blockchain Site", url: "https://andersbrownworth.com/blockchain", category: "Finance" },
+  { title: "Coinbase", url: "https://www.coinbase.com/en-gb/explore", category: "Finance" },
+  { title: "Bank", url: "http://www1.firstdirect.com", category: "Banking & Insurance" },
+  { title: "Teachers Pension", url: "https://www.teacherspensions.co.uk/members/member-login.aspx", category: "Banking & Insurance" },
+  { title: "Churchill Insurance", url: "https://www.churchill.com", category: "Banking & Insurance" },
+  { title: "Admiral Insurance", url: "https://www.admiral.com", category: "Banking & Insurance" },
+  { title: "Aviva Insurance", url: "https://www.aviva.co.uk", category: "Banking & Insurance" },
+  { title: "Hire Car Excess Insurance", url: "https://www.carhireexcess.com", category: "Banking & Insurance" },
+  { title: "ripe - Dinghy Insurance", url: "https://www.ripeinsurance.co.uk/login", category: "Banking & Insurance" },
+  { title: "Gov.uk", url: "https://www.access.service.gov.uk/login/signin/creds", category: "Gov" },
+  { title: "Student Finance", url: "https://logon.slc.co.uk/welcome/secured/login?_locale=en_GB&cookieConsent=accept", category: "Gov" },
+  { title: "Teacher Pensions", url: "https://www.teacherspensions.co.uk/members/member-login.aspx", category: "Gov" },
+  { title: "HM Land Registry", url: "https://propertyalert.landregistry.gov.uk/propertyalert/myalerts/entry?SignIn=Sign+in", category: "Gov" },
+  { title: "Lebara Mobiles", url: "https://www.lebara.co.uk/en/home.html", category: "Home / Utilities" },
+  { title: "BT Broadband", url: "https://www.BT.com", category: "Home / Utilities" },
+  { title: "TV License", url: "https://www.tvlicensing.co.uk/yourlicense", category: "Home / Utilities" },
+  { title: "Octopus Energy", url: "https://octopus.energy", category: "Home / Utilities" },
+  { title: "Fasthosts login", url: "https://admin.fasthosts.co.uk", category: "Photography" },
+  { title: "Simlab Photos", url: "https://www.simlab.co.uk", category: "Photography" },
+  { title: "X-T4 Manual", url: "https://fujifilm-dsc.com/en/manual/x-t4", category: "Photography" },
+  { title: "Wordpress", url: "https://wordpress.com/log-in/", category: "Photography" },
+  { title: "Craig Roberts Photography", url: "https://craigrobertsphotography.co.uk", category: "Photography" },
+  { title: "Cecile Buckenmeyer", url: "https://www.cecilebuckenmeyer.co.uk", category: "Jung" },
+  { title: "Jung Institute", url: "https://www.junginstitut.ch/en", category: "Jung" },
+  { title: "Carl Chapman", url: "https://www.carlchapman.co.uk", category: "Jung" },
+  { title: "Mark Saban", url: "http://www.marksaban.co.uk/index.html", category: "Jung" },
+  { title: "igap", url: "https://www.igap.co.uk", category: "Jung" },
+  { title: "Speaking of Jung", url: "https://speakingofjung.com", category: "Jung" },
+  { title: "Doctor", url: "https://www.thependlemedicalpartnership.nhs.uk", category: "Health" },
+  { title: "PSA Test", url: "https://bkpca.mypsatests.org.uk/Login", category: "Health" },
+  { title: "Physio", url: "https://www.theperformance-lab.co.uk", category: "Health" },
+  { title: "Food for the brain", url: "https://foodforthebrain.org", category: "Health" },
+  { title: "Cholesterol Converter", url: "https://www.omnicalculator.com/health/cholesterol-units", category: "Health" },
+  { title: "Suppliments - Royal Oak", url: "https://royaloakhealth.co.uk", category: "Health" }
 ];
 
 const CATEGORY_ORDER = [
-  "Links",
-  "Media / Entertainment",
-  "Webapps",
-  "Nostr",
-  "Shopping",
-  "Travel",
-  "Finance",
-  "Banking & Insurance",
-  "Gov",
-  "Home / Utilities",
-  "Photography",
-  "Jung",
-  "Health"
+  "Links", "Media / Entertainment", "Webapps", "Nostr", "Shopping",
+  "Travel", "Finance", "Banking & Insurance", "Gov", "Home / Utilities",
+  "Photography", "Jung", "Health"
 ];
 
-const STORAGE_KEY = "links_data";
+const STORAGE_KEY = "links_overlay"; // { added: [...], removed: [{title,url}] }
+let baseLinks = null; // loaded from links.json (or fallback)
 
-function loadLinks() {
-  const stored = localStorage.getItem(STORAGE_KEY);
-  if (stored) {
-    try { return JSON.parse(stored); } catch (e) { /* fall through */ }
-  }
+// ===== Load base links from links.json =====
+async function fetchBaseLinks() {
+  try {
+    const resp = await fetch("links.json");
+    if (resp.ok) {
+      const data = await resp.json();
+      if (Array.isArray(data) && data.length > 0) return data;
+    }
+  } catch (e) { /* fallback */ }
   return DEFAULT_LINKS.map(l => ({ ...l }));
 }
 
-function saveLinks(links) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(links));
-}
-
-// ===== Add a link =====
-function addLink(title, url, category) {
-  const links = loadLinks();
-  links.push({ title: title.trim(), url: url.trim(), category });
-  saveLinks(links);
-  render();
-}
-
-// ===== Delete a link =====
-function deleteLink(index) {
-  const links = loadLinks();
-  links.splice(index, 1);
-  saveLinks(links);
-  render();
-}
-
-// ===== Render everything =====
-function render() {
-  let links = loadLinks();
-  if (!Array.isArray(links)) {
-    links = DEFAULT_LINKS.map(l => ({ ...l }));
+// ===== Overlay logic =====
+function getOverlay() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : { added: [], removed: [] };
+  } catch (e) {
+    return { added: [], removed: [] };
   }
+}
+
+function saveOverlay(overlay) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(overlay));
+}
+
+function linkKey(l) { return l.title + "|||" + l.url; }
+
+function getEffectiveLinks() {
+  const base = baseLinks || DEFAULT_LINKS;
+  const ov = getOverlay();
+  const removedKeys = new Set(ov.removed.map(linkKey));
+  // Start with base minus removed
+  const effective = base.filter(l => !removedKeys.has(linkKey(l)));
+  // Add user-added links
+  for (const l of ov.added) effective.push(l);
+  return effective;
+}
+
+function addLink(title, url, category) {
+  const ov = getOverlay();
+  ov.added.push({ title: title.trim(), url: url.trim(), category });
+  saveOverlay(ov);
+  render();
+}
+
+function deleteLink(index) {
+  const links = getEffectiveLinks();
+  const link = links[index];
+  if (!link) return;
+  const key = linkKey(link);
+  const ov = getOverlay();
+
+  // Check if it's a user-added link
+  const addedIdx = ov.added.findIndex(l => linkKey(l) === key);
+  if (addedIdx >= 0) {
+    ov.added.splice(addedIdx, 1);
+  } else {
+    // It's a base link — mark as removed
+    ov.removed.push({ title: link.title, url: link.url });
+  }
+  saveOverlay(ov);
+  render();
+}
+
+// ===== Export / Import =====
+function exportJSON() {
+  const links = getEffectiveLinks();
+  const blob = new Blob([JSON.stringify(links, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "links.json";
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function importJSON(file) {
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const imported = JSON.parse(reader.result);
+      if (!Array.isArray(imported)) { alert("Invalid format: expected an array."); return; }
+      if (!confirm("This will replace your current links with the imported file. Continue?")) return;
+      // Merge: set baseLinks to imported, clear overlay
+      baseLinks = imported;
+      saveOverlay({ added: [], removed: [] });
+      render();
+    } catch (e) {
+      alert("Could not parse the file as JSON.");
+    }
+  };
+  reader.readAsText(file);
+}
+
+// ===== Render =====
+function render() {
+  const links = getEffectiveLinks();
 
   // Build TOC
   const tocList = document.getElementById("toc-list");
@@ -318,13 +383,12 @@ function render() {
     .map(cat => `<li><a href="#${encodeURIComponent(cat)}">${escHtml(cat)}</a></li>`)
     .join("");
 
-  // Build links HTML using real array indices
+  // Build links HTML
   const container = document.getElementById("links-container");
   let html = "";
 
   for (const cat of CATEGORY_ORDER) {
     html += `<h5 id="${encodeURIComponent(cat)}">${escHtml(cat)}</h5>\n`;
-
     const catLinks = links
       .map((link, idx) => ({ link, idx }))
       .filter(({ link }) => link.category === cat);
@@ -369,7 +433,8 @@ function escAttr(s) {
 }
 
 // ===== Init =====
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+  baseLinks = await fetchBaseLinks();
   render();
 
   // Toggle edit mode
@@ -399,12 +464,23 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("link-url").value = "https://";
   });
 
-  // Submit on Enter in URL field
+  // Submit on Enter
   document.getElementById("link-url").addEventListener("keydown", (e) => {
     if (e.key === "Enter") document.getElementById("btn-add").click();
   });
   document.getElementById("link-title").addEventListener("keydown", (e) => {
     if (e.key === "Enter") document.getElementById("btn-add").click();
+  });
+
+  // Export
+  document.getElementById("btn-export").addEventListener("click", exportJSON);
+
+  // Import
+  const fileInput = document.getElementById("import-file");
+  document.getElementById("btn-import").addEventListener("click", () => fileInput.click());
+  fileInput.addEventListener("change", () => {
+    if (fileInput.files[0]) importJSON(fileInput.files[0]);
+    fileInput.value = "";
   });
 });
 </script>
