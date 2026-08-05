@@ -93,66 +93,6 @@
       background: #e4e4e4;
     }
 
-    /* Sync status indicator */
-    #sync-status {
-      display: inline-block;
-      font-size: 0.8em;
-      margin-left: 10px;
-      vertical-align: middle;
-    }
-    #sync-status.synced { color: #2a8; }
-    #sync-status.local { color: #999; }
-    #sync-status.error { color: #c66; }
-
-    /* Sign-in UI */
-    #nostr-signin {
-      display: inline-block;
-      margin-left: 8px;
-      vertical-align: middle;
-    }
-    #nostr-signin a {
-      font-size: 0.8em;
-      color: #4078c0;
-      cursor: pointer;
-      text-decoration: underline;
-    }
-    #nostr-signin a:hover { color: #2a5ea0; }
-    #signin-form {
-      display: none;
-      margin-top: 8px;
-      background: #fef9e7;
-      border: 1px solid #e8d87a;
-      border-radius: 6px;
-      padding: 10px 14px;
-      font-size: 0.85em;
-    }
-    #signin-form.visible { display: block; }
-    #signin-form label { display: block; margin-bottom: 4px; color: #555; }
-    #signin-form input {
-      width: 100%;
-      padding: 5px 8px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-size: 0.9em;
-      box-sizing: border-box;
-      margin-bottom: 6px;
-    }
-    #signin-form button {
-      padding: 4px 12px;
-      background: #4078c0;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 0.85em;
-    }
-    #signin-form button:hover { background: #3568aa; }
-    #signin-form .warning {
-      color: #b66;
-      font-size: 0.8em;
-      margin-bottom: 6px;
-    }
-
     /* Hide edit UI by default */
     .edit-ui { display: none; }
     body.editing .edit-ui { display: block; }
@@ -183,17 +123,6 @@
     <h4 id="Links">Links</h4>
 
     <button id="toggle-edit">Edit Links</button>
-    <span id="sync-status"></span>
-    <span id="nostr-signin">
-      <a id="signin-link">Sign in to sync</a>
-      <div id="signin-form">
-        <p class="warning">Never paste your nsec on a site you don't trust.</p>
-        <label for="nsec-input">Your nsec (starts with nsec1)</label>
-        <input type="password" id="nsec-input" placeholder="nsec1...">
-        <button id="btn-signin">Sign in</button>
-        <button id="btn-signout" style="background:#999;margin-left:4px;">Sign out</button>
-      </div>
-    </span>
 
     <div id="add-link-form" class="edit-ui">
       <h5>Add a Link</h5>
@@ -215,7 +144,6 @@
 
 <footer></footer>
 
-<script src="https://cdn.jsdelivr.net/npm/nostr-tools@2.7.2/lib/nostr.bundle.js"></script>
 <script>
 // ===== Default links (first-time visitors) =====
 const DEFAULT_LINKS = [
@@ -347,156 +275,8 @@ const CATEGORY_ORDER = [
 ];
 
 const STORAGE_KEY = "links_data";
-const SESSION_NSEC_KEY = "links_nsec";
 
-// ===== Nostr sync =====
-const NOSTR_KIND = 30078;
-const NOSTR_D_TAG = "links-page";
-const RELAYS = [
-  "wss://relay.damus.io",
-  "wss://nos.lol",
-  "wss://relay.primal.net"
-];
-
-let nostrPubkey = null;
-let nostrPrivkey = null;  // Uint8Array, only when using nsec sign-in
-let syncMethod = null;    // "nip07" | "nsec" | null
-
-function hasNip07() {
-  return !!(window.nostr && window.nostr.getPublicKey);
-}
-
-function isNostrToolsReady() {
-  return !!(window.NostrTools && window.NostrTools.getPublicKey && window.NostrTools.finalizeEvent);
-}
-
-// Derive pubkey from nsec (Uint8Array) and store in sessionStorage
-function setNsec(privkeyBytes) {
-  nostrPrivkey = privkeyBytes;
-  nostrPubkey = window.NostrTools.getPublicKey(privkeyBytes);
-  syncMethod = "nsec";
-  sessionStorage.setItem(SESSION_NSEC_KEY, window.NostrTools.nip19.nsecEncode(privkeyBytes));
-}
-
-function clearNsec() {
-  nostrPrivkey = null;
-  nostrPubkey = null;
-  syncMethod = null;
-  sessionStorage.removeItem(SESSION_NSEC_KEY);
-}
-
-function restoreNsec() {
-  const enc = sessionStorage.getItem(SESSION_NSEC_KEY);
-  if (enc && isNostrToolsReady()) {
-    try {
-      const { type, data } = window.NostrTools.nip19.decode(enc);
-      if (type === "nsec") {
-        nostrPrivkey = data;
-        nostrPubkey = window.NostrTools.getPublicKey(data);
-        syncMethod = "nsec";
-        return true;
-      }
-    } catch (e) { /* invalid */ }
-  }
-  return false;
-}
-
-async function signEvent(unsigned) {
-  if (syncMethod === "nip07") {
-    return await window.nostr.signEvent(unsigned);
-  }
-  if (syncMethod === "nsec" && nostrPrivkey) {
-    return window.NostrTools.finalizeEvent(unsigned, nostrPrivkey);
-  }
-  throw new Error("Not signed in");
-}
-
-function nostrEventFromLinks(links) {
-  return {
-    kind: NOSTR_KIND,
-    content: JSON.stringify(links),
-    tags: [["d", NOSTR_D_TAG]],
-    created_at: Math.floor(Date.now() / 1000),
-    pubkey: nostrPubkey
-  };
-}
-
-function publishToRelay(relayUrl, event) {
-  return new Promise((resolve) => {
-    try {
-      const ws = new WebSocket(relayUrl);
-      const timeout = setTimeout(() => { ws.close(); resolve(); }, 8000);
-      ws.onopen = () => {
-        ws.send(JSON.stringify(["EVENT", event]));
-        setTimeout(() => { clearTimeout(timeout); ws.close(); resolve(); }, 1000);
-      };
-      ws.onerror = () => { clearTimeout(timeout); resolve(); };
-    } catch (e) { resolve(); }
-  });
-}
-
-async function nostrPublish(links) {
-  if (!nostrPubkey) return;
-  const unsigned = nostrEventFromLinks(links);
-  try {
-    const signed = await signEvent(unsigned);
-    for (const relay of RELAYS) {
-      publishToRelay(relay, signed);
-    }
-  } catch (e) {
-    console.warn("Nostr publish failed:", e);
-  }
-}
-
-async function nostrFetch() {
-  if (!nostrPubkey) return null;
-
-  const filter = {
-    kinds: [NOSTR_KIND],
-    authors: [nostrPubkey],
-    "#d": [NOSTR_D_TAG],
-    limit: 1
-  };
-
-  // Try relays sequentially, return first result
-  for (const relayUrl of RELAYS) {
-    try {
-      const events = await fetchFromRelay(relayUrl, filter);
-      if (events.length > 0) {
-        try {
-          return JSON.parse(events[0].content);
-        } catch (e) { /* skip malformed */ }
-      }
-    } catch (e) { /* try next relay */ }
-  }
-  return null;
-}
-
-function fetchFromRelay(relayUrl, filter) {
-  return new Promise((resolve, reject) => {
-    const ws = new WebSocket(relayUrl);
-    const events = [];
-    const timeout = setTimeout(() => { ws.close(); resolve(events); }, 6000);
-    ws.onopen = () => {
-      ws.send(JSON.stringify(["REQ", "links-fetch", filter]));
-    };
-    ws.onmessage = (msg) => {
-      const [type, subId, event] = JSON.parse(msg.data);
-      if (type === "EVENT" && subId === "links-fetch") {
-        events.push(event);
-      }
-      if (type === "EOSE" && subId === "links-fetch") {
-        clearTimeout(timeout);
-        ws.close();
-        resolve(events);
-      }
-    };
-    ws.onerror = () => { clearTimeout(timeout); resolve(events); };
-  });
-}
-
-// ===== localStorage fallback =====
-function loadLinksLocal() {
+function loadLinks() {
   const stored = localStorage.getItem(STORAGE_KEY);
   if (stored) {
     try { return JSON.parse(stored); } catch (e) { /* fall through */ }
@@ -504,52 +284,30 @@ function loadLinksLocal() {
   return DEFAULT_LINKS.map(l => ({ ...l }));
 }
 
-function saveLinksLocal(links) {
+function saveLinks(links) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(links));
 }
 
-// ===== Unified load/save =====
-async function loadLinks() {
-  // Try Nostr if signed in
-  if (nostrPubkey) {
-    try {
-      const remote = await nostrFetch();
-      if (remote && Array.isArray(remote) && remote.length > 0) {
-        saveLinksLocal(remote);
-        return remote;
-      }
-    } catch (e) {
-      console.warn("Nostr fetch failed, using local:", e);
-    }
-  }
-  return loadLinksLocal();
-}
-
-async function saveLinks(links) {
-  saveLinksLocal(links);
-  nostrPublish(links);
-}
-
 // ===== Add a link =====
-async function addLink(title, url, category) {
-  const links = await loadLinks();
+function addLink(title, url, category) {
+  const links = loadLinks();
   links.push({ title: title.trim(), url: url.trim(), category });
-  await saveLinks(links);
-  await render();
+  saveLinks(links);
+  render();
 }
 
 // ===== Delete a link =====
-async function deleteLink(index) {
-  const links = await loadLinks();
+function deleteLink(index) {
+  const links = loadLinks();
   links.splice(index, 1);
-  await saveLinks(links);
-  await render();
+  saveLinks(links);
+  render();
 }
 
 // ===== Render everything =====
-async function render() {
-  let links = await loadLinks();
-  if (!links || typeof links.map !== "function") {
+function render() {
+  let links = loadLinks();
+  if (!Array.isArray(links)) {
     links = DEFAULT_LINKS.map(l => ({ ...l }));
   }
 
@@ -610,75 +368,8 @@ function escAttr(s) {
 }
 
 // ===== Init =====
-document.addEventListener("DOMContentLoaded", async () => {
-  const statusEl = document.getElementById("sync-status");
-  const signinLink = document.getElementById("signin-link");
-  const signinForm = document.getElementById("signin-form");
-  const nsecInput = document.getElementById("nsec-input");
-
-  function updateSyncUI() {
-    if (nostrPubkey) {
-      const short = nostrPubkey.slice(0, 8) + "...";
-      statusEl.textContent = "\u25C6 Synced as " + short;
-      statusEl.className = "synced";
-      signinLink.textContent = "";
-      signinLink.style.display = "none";
-      signinForm.classList.remove("visible");
-      document.getElementById("btn-signout").style.display = syncMethod === "nsec" ? "inline-block" : "none";
-    } else {
-      statusEl.textContent = "\u25C7 local only";
-      statusEl.className = "local";
-      signinLink.textContent = "Sign in to sync";
-      signinLink.style.display = "inline";
-      signinForm.classList.remove("visible");
-    }
-  }
-
-  // 1. Try NIP-07 extension
-  if (hasNip07()) {
-    try {
-      nostrPubkey = await window.nostr.getPublicKey();
-      syncMethod = "nip07";
-    } catch (e) { /* extension rejected */ }
-  }
-
-  // 2. Try restore nsec from session
-  if (!nostrPubkey && isNostrToolsReady()) {
-    restoreNsec();
-  }
-
-  updateSyncUI();
-  await render();
-
-  // Sign-in link toggle
-  signinLink.addEventListener("click", () => {
-    if (nostrPubkey) return;
-    signinForm.classList.toggle("visible");
-  });
-
-  // Sign in with nsec
-  document.getElementById("btn-signin").addEventListener("click", () => {
-    const val = nsecInput.value.trim();
-    if (!val) { alert("Paste your nsec key."); return; }
-    if (!isNostrToolsReady()) { alert("nostr-tools not loaded yet, try refreshing."); return; }
-    try {
-      const { type, data } = window.NostrTools.nip19.decode(val);
-      if (type !== "nsec") { alert("That doesn't look like an nsec (should start with nsec1)."); return; }
-      setNsec(data);
-      nsecInput.value = "";
-      updateSyncUI();
-      render();
-    } catch (e) {
-      alert("Invalid nsec. Make sure it starts with nsec1.");
-    }
-  });
-
-  // Sign out
-  document.getElementById("btn-signout").addEventListener("click", () => {
-    clearNsec();
-    updateSyncUI();
-    render();
-  });
+document.addEventListener("DOMContentLoaded", () => {
+  render();
 
   // Toggle edit mode
   const toggleBtn = document.getElementById("toggle-edit");
