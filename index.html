@@ -295,7 +295,9 @@ function sOv(o) { localStorage.setItem(STOR,JSON.stringify(o)); }
 function lk(l) { return l.title+"|||"+l.url; }
 function gLinks() {
   var o=gOv(), rk=new Set(o.removed.map(lk)), e=base.filter(function(l){return!rk.has(lk(l));});
-  for(var i=0;i<o.added.length;i++) e.push(o.added[i]); return e;
+  for(var i=0;i<o.added.length;i++) e.push(o.added[i]);
+  e.sort(function(a,b){return a.category.localeCompare(b.category)||a.title.localeCompare(b.title);});
+  return e;
 }
 function addLink(t,u,c) { var o=gOv(); o.added.push({title:t.trim(),url:u.trim(),category:c}); sOv(o); render(); }
 function delLink(i) { var ls=gLinks(), l=ls[i]; if(!l)return; var k=lk(l), o=gOv(), ai=-1;
