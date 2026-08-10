@@ -317,6 +317,7 @@ function saveToFile() {
   html=html.replace(' class="stackedit editing"',' class="stackedit"');
   var b=new Blob([html],{type:"text/html"}), a=document.createElement("a");
   a.href=URL.createObjectURL(b); a.download="index.html"; a.click(); URL.revokeObjectURL(a.href);
+  base=ls; sOv({added:[],removed:[]}); render();
 }
 function importJSON(f) { var r=new FileReader(); r.onload=function(){
   try{var d=JSON.parse(r.result);if(!Array.isArray(d)){alert("Invalid format.");return;}
