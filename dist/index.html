@@ -208,7 +208,7 @@ function getEffectiveLinks() {
   const ov = getOverlay();
   const removedKeys = new Set(ov.removed.map(linkKey));
   // Start with base minus removed
-  const effective = base.filter(l => !removedKeys.has(linkKey(l)));
+  const effective = baseLinks.filter(l => !removedKeys.has(linkKey(l)));
   // Add user-added links
   for (const l of ov.added) effective.push(l);
   return effective;
