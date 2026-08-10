@@ -7,16 +7,12 @@
   <link rel="stylesheet" href="https://stackedit.io/style.css" />
   <style>
     #add-link-form {
-      background: #f5f5f5;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      padding: 14px 16px;
-      margin-bottom: 20px;
+      background: #f5f5f5; border: 1px solid #ddd; border-radius: 6px;
+      padding: 14px 16px; margin-bottom: 20px;
     }
     #add-link-form h5 { margin: 0 0 10px 0; }
     #add-link-form label { display: block; font-size: 0.85em; margin-bottom: 2px; color: #555; }
-    #add-link-form input,
-    #add-link-form select {
+    #add-link-form input, #add-link-form select {
       width: 100%; padding: 6px 8px; margin-bottom: 8px;
       border: 1px solid #ccc; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;
     }
@@ -24,16 +20,11 @@
       padding: 6px 16px; background: #4078c0; color: #fff;
       border: none; border-radius: 4px; cursor: pointer; font-size: 0.9em;
     }
-    #add-link-form button:hover { background: #3568aa; }
-    .link-row {
-      display: inline-flex; align-items: center; gap: 4px; margin-right: 6px;
-    }
+    .link-row { display: inline-flex; align-items: center; gap: 4px; margin-right: 6px; }
     .link-row .del-btn {
-      display: inline-block; width: 18px; height: 18px; line-height: 16px;
-      text-align: center; font-size: 14px; font-weight: bold; color: #c00;
-      background: none; border: 1px solid transparent; border-radius: 50%;
-      cursor: pointer; padding: 0; opacity: 0.35;
-      transition: opacity 0.15s, border-color 0.15s; vertical-align: middle; flex-shrink: 0;
+      width: 18px; height: 18px; line-height: 16px; text-align: center; font-size: 14px;
+      font-weight: bold; color: #c00; background: none; border: 1px solid transparent;
+      border-radius: 50%; cursor: pointer; padding: 0; opacity: 0.35; flex-shrink: 0;
     }
     .link-row:hover .del-btn { opacity: 1; border-color: #c00; }
     .link-row .del-btn:hover { background: #fee; }
@@ -41,7 +32,6 @@
       padding: 4px 12px; background: #f0f0f0; border: 1px solid #ccc;
       border-radius: 4px; cursor: pointer; font-size: 0.85em; margin-bottom: 16px;
     }
-    #toggle-edit:hover { background: #e4e4e4; }
     .edit-ui { display: none; }
     body.editing .edit-ui { display: block; }
     body.editing .link-row .del-btn { display: inline-block; }
@@ -53,20 +43,12 @@
       padding: 4px 10px; background: #f0f0f0; border: 1px solid #ccc;
       border-radius: 4px; cursor: pointer; font-size: 0.8em; margin-right: 6px;
     }
-    #io-buttons button:hover { background: #e4e4e4; }
   </style>
 </head>
 <body class="stackedit">
 <div class="stackedit__left">
-  <div class="stackedit__toc">
-    <ul>
-      <li><a href="#Links">Links</a>
-        <ul id="toc-list"></ul>
-      </li>
-    </ul>
-  </div>
+  <div class="stackedit__toc"><ul><li><a href="#Links">Links</a><ul id="toc-list"></ul></li></ul></div>
 </div>
-
 <div class="stackedit__right">
   <div class="stackedit__html">
     <h4 id="Links">Links</h4>
@@ -90,635 +72,167 @@
     </div>
 
     <div id="links-container"></div>
-
     <br>
     <small style="color:#888;">Vibed with <a href="https://shakespeare.diy" target="_blank">Shakespeare</a></small>
   </div>
 </div>
-
 <footer></footer>
-
 <script>
-const CATEGORY_ORDER = [
-  "Frequent links", "Media / Entertainment", "Webapps", "Nostr", "Shopping",
-  "Travel", "Finance", "Banking & Insurance", "Gov", "Home / Utilities",
-  "Photography", "Jung", "Health"
+// This list is auto-synced from links.json
+var BASE_LINKS = [
+
+  {"title":"Dance videos","url":"https://jqw22.github.io/dance/","category":"Frequent links"},
+  {"title":"Google Maps","url":"https://www.google.com/maps","category":"Frequent links"},
+  {"title":"jamesdewhurst.uk","url":"http://www.jamesdewhurst.uk","category":"Frequent links"},
+  {"title":"Jung Research App","url":"https://jqw22.github.io/cwtext2/","category":"Frequent links"},
+  {"title":"Notebook App","url":"https://jqw22.github.io/notebook/","category":"Frequent links"},
+  {"title":"REM email","url":"https://login.microsoftonline.com","category":"Frequent links"},
+  {"title":"Three Rings","url":"https://www.3r.org.uk/auth","category":"Frequent links"},
+  {"title":"LOL","url":"https://eu.lolesports.com","category":"Media / Entertainment"},
+  {"title":"Youtube","url":"https://www.youtube.com","category":"Media / Entertainment"},
+  {"title":"Apple icloud","url":"https://www.icloud.com","category":"Webapps"},
+  {"title":"Archive Books","url":"https://archive.org","category":"Webapps"},
+  {"title":"DrawIO","url":"https://www.drawio.com","category":"Webapps"},
+  {"title":"Family Search","url":"https://ident.familysearch.org/identity/login/?state=https://www.familysearch.org/en/united-kingdom/","category":"Webapps"},
+  {"title":"iLovePDF","url":"https://www.ilovepdf.com","category":"Webapps"},
+  {"title":"Incogni","url":"https://incogni.com/auth/login","category":"Webapps"},
+  {"title":"OneDrive","url":"https://onedrive.live.com","category":"Webapps"},
+  {"title":"Proton Drive","url":"https://drive.proton.me","category":"Webapps"},
+  {"title":"Spotify","url":"https://open.spotify.com","category":"Webapps"},
+  {"title":"Standard Notes","url":"https://app.standardnotes.com","category":"Webapps"},
+  {"title":"Bookstr","url":"https://bookstr.xyz","category":"Nostr"},
+  {"title":"Nostr","url":"https://nostr.com","category":"Nostr"},
+  {"title":"Nostrplebs","url":"https://nostrplebs.com","category":"Nostr"},
+  {"title":"Shakespeare","url":"https://shakespeare.diy/","category":"Nostr"},
+  {"title":"Amazon","url":"https://www.amazon.co.uk","category":"Shopping"},
+  {"title":"Classic Tools","url":"https://www.classichandtools.com","category":"Shopping"},
+  {"title":"Coal shop","url":"https://supaheatfuels.co.uk","category":"Shopping"},
+  {"title":"Honest Grapes","url":"https://www.honestgrapes.co.uk/account/login?return_url=%2Faccount","category":"Shopping"},
+  {"title":"Nespresso","url":"https://www.nespresso.com/uk/en","category":"Shopping"},
+  {"title":"Putnams","url":"https://putnams.co.uk","category":"Shopping"},
+  {"title":"Tea Shop","url":"https://www.exoticteapot.co.uk","category":"Shopping"},
+  {"title":"Wood Supplier - Lekto","url":"https://www.lektowoodfuels.co.uk/","category":"Shopping"},
+  {"title":"Airbnb","url":"https://www.airbnb.co.uk","category":"Travel"},
+  {"title":"BA.com","url":"https://www.ba.com","category":"Travel"},
+  {"title":"Booking.com","url":"https://www.booking.com","category":"Travel"},
+  {"title":"British Pilgrimages","url":"https://www.britishpilgrimage.org","category":"Travel"},
+  {"title":"Easyjet","url":"https://www.easyjet.com/en","category":"Travel"},
+  {"title":"Enterprise Car Hire","url":"https://www.enterprise.co.uk/en","category":"Travel"},
+  {"title":"Flight Radar","url":"https://www.flightradar24.com","category":"Travel"},
+  {"title":"Google Flights","url":"https://www.google.com/travel","category":"Travel"},
+  {"title":"Holiday Cottages","url":"https://www.cottages.com","category":"Travel"},
+  {"title":"i-escape","url":"https://www.i-escape.com","category":"Travel"},
+  {"title":"Manchester Airport Parking","url":"https://www.manchesterairport.co.uk/booking","category":"Travel"},
+  {"title":"Olhao Appartments","url":"https://www.whiteterraces.com","category":"Travel"},
+  {"title":"Olhao Convento","url":"https://www.conventoolhao.com/book","category":"Travel"},
+  {"title":"Ryanair","url":"https://www.ryanair.com","category":"Travel"},
+  {"title":"Sawdays","url":"https://www.sawdays.co.uk","category":"Travel"},
+  {"title":"Seat Spy","url":"https://www.seatspy.com","category":"Travel"},
+  {"title":"Trainline","url":"https://www.thetrainline.com","category":"Travel"},
+  {"title":"Unique Home Stays cottages","url":"https://www.uniquehomestays.com","category":"Travel"},
+  {"title":"With Locals","url":"https://www.withlocals.com","category":"Travel"},
+  {"title":"Blockchain Site","url":"https://andersbrownworth.com/blockchain","category":"Finance"},
+  {"title":"Bonner PR","url":"https://www.bonnerprivateresearch.com","category":"Finance"},
+  {"title":"Bytetree","url":"https://www.bytetree.com/the-multi-asset-investor","category":"Finance"},
+  {"title":"Chards","url":"https://www.chards.co.uk","category":"Finance"},
+  {"title":"Coinbase","url":"https://www.coinbase.com/en-gb/explore","category":"Finance"},
+  {"title":"Epsilon Theory","url":"https://www.epsilontheory.com","category":"Finance"},
+  {"title":"Famers Fable","url":"https://www.farmersfable.org","category":"Finance"},
+  {"title":"Halifax","url":"https://share-dealing.halifaxsharedealing-online.co.uk","category":"Finance"},
+  {"title":"HL","url":"https://www.hl.co.uk/shares","category":"Finance"},
+  {"title":"Interactive Brokers","url":"https://www.interactivebrokers.co.uk/portal/#/dashboard/positions","category":"Finance"},
+  {"title":"Myrmikan","url":"http://www.myrmikan.com/port","category":"Finance"},
+  {"title":"Naval","url":"https://nav.al","category":"Finance"},
+  {"title":"Southbank","url":"https://www.southbankresearch.com","category":"Finance"},
+  {"title":"Taleb","url":"https://fooledbyrandomness.com","category":"Finance"},
+  {"title":"Admiral Insurance","url":"https://www.admiral.com","category":"Banking & Insurance"},
+  {"title":"Aviva Insurance","url":"https://www.aviva.co.uk","category":"Banking & Insurance"},
+  {"title":"Bank","url":"http://www1.firstdirect.com","category":"Banking & Insurance"},
+  {"title":"Churchill Insurance","url":"https://www.churchill.com","category":"Banking & Insurance"},
+  {"title":"Hire Car Excess Insurance","url":"https://www.carhireexcess.com","category":"Banking & Insurance"},
+  {"title":"ripe - Dinghy Insurance","url":"https://www.ripeinsurance.co.uk/login","category":"Banking & Insurance"},
+  {"title":"Teachers Pension","url":"https://www.teacherspensions.co.uk/members/member-login.aspx","category":"Banking & Insurance"},
+  {"title":"Gov.uk","url":"https://www.access.service.gov.uk/login/signin/creds","category":"Gov"},
+  {"title":"HM Land Registry","url":"https://propertyalert.landregistry.gov.uk/propertyalert/myalerts/entry?SignIn=Sign+in","category":"Gov"},
+  {"title":"Student Finance","url":"https://logon.slc.co.uk/welcome/secured/login?_locale=en_GB&cookieConsent=accept","category":"Gov"},
+  {"title":"Teacher Pensions","url":"https://www.teacherspensions.co.uk/members/member-login.aspx","category":"Gov"},
+  {"title":"BT Broadband","url":"https://www.BT.com","category":"Home / Utilities"},
+  {"title":"Lebara Mobiles","url":"https://www.lebara.co.uk/en/home.html","category":"Home / Utilities"},
+  {"title":"Octopus Energy","url":"https://octopus.energy","category":"Home / Utilities"},
+  {"title":"TV License","url":"https://www.tvlicensing.co.uk/yourlicense","category":"Home / Utilities"},
+  {"title":"Craig Roberts Photography","url":"https://craigrobertsphotography.co.uk","category":"Photography"},
+  {"title":"Fasthosts login","url":"https://admin.fasthosts.co.uk","category":"Photography"},
+  {"title":"Simlab Photos","url":"https://www.simlab.co.uk","category":"Photography"},
+  {"title":"Wordpress","url":"https://wordpress.com/log-in/","category":"Photography"},
+  {"title":"X-T4 Manual","url":"https://fujifilm-dsc.com/en/manual/x-t4","category":"Photography"},
+  {"title":"Carl Chapman","url":"https://www.carlchapman.co.uk","category":"Jung"},
+  {"title":"Cecile Buckenmeyer","url":"https://www.cecilebuckenmeyer.co.uk","category":"Jung"},
+  {"title":"igap","url":"https://www.igap.co.uk","category":"Jung"},
+  {"title":"Jung Institute","url":"https://www.junginstitut.ch/en","category":"Jung"},
+  {"title":"Mark Saban","url":"http://www.marksaban.co.uk/index.html","category":"Jung"},
+  {"title":"Speaking of Jung","url":"https://speakingofjung.com","category":"Jung"},
+  {"title":"Cholesterol Converter","url":"https://www.omnicalculator.com/health/cholesterol-units","category":"Health"},
+  {"title":"Doctor","url":"https://www.thependlemedicalpartnership.nhs.uk","category":"Health"},
+  {"title":"Food for the brain","url":"https://foodforthebrain.org","category":"Health"},
+  {"title":"Physio","url":"https://www.theperformance-lab.co.uk","category":"Health"},
+  {"title":"PSA Test","url":"https://bkpca.mypsatests.org.uk/Login","category":"Health"},
+  {"title":"Suppliments - Royal Oak","url":"https://royaloakhealth.co.uk","category":"Health"}
+
 ];
-var LINKS_DATA = 
-[
-  {
-    "title": "Dance videos",
-    "url": "https://jqw22.github.io/dance/",
-    "category": "Frequent links"
-  },
-  {
-    "title": "Google Maps",
-    "url": "https://www.google.com/maps",
-    "category": "Frequent links"
-  },
-  {
-    "title": "jamesdewhurst.uk",
-    "url": "http://www.jamesdewhurst.uk",
-    "category": "Frequent links"
-  },
-  {
-    "title": "Jung Research App",
-    "url": "https://jqw22.github.io/cwtext2/",
-    "category": "Frequent links"
-  },
-  {
-    "title": "Notebook App",
-    "url": "https://jqw22.github.io/notebook/",
-    "category": "Frequent links"
-  },
-  {
-    "title": "REM email",
-    "url": "https://login.microsoftonline.com",
-    "category": "Frequent links"
-  },
-  {
-    "title": "Three Rings",
-    "url": "https://www.3r.org.uk/auth",
-    "category": "Frequent links"
-  },
-  {
-    "title": "LOL",
-    "url": "https://eu.lolesports.com",
-    "category": "Media / Entertainment"
-  },
-  {
-    "title": "Youtube",
-    "url": "https://www.youtube.com",
-    "category": "Media / Entertainment"
-  },
-  {
-    "title": "Apple icloud",
-    "url": "https://www.icloud.com",
-    "category": "Webapps"
-  },
-  {
-    "title": "Archive Books",
-    "url": "https://archive.org",
-    "category": "Webapps"
-  },
-  {
-    "title": "DrawIO",
-    "url": "https://www.drawio.com",
-    "category": "Webapps"
-  },
-  {
-    "title": "Family Search",
-    "url": "https://ident.familysearch.org/identity/login/?state=https://www.familysearch.org/en/united-kingdom/",
-    "category": "Webapps"
-  },
-  {
-    "title": "iLovePDF",
-    "url": "https://www.ilovepdf.com",
-    "category": "Webapps"
-  },
-  {
-    "title": "Incogni",
-    "url": "https://incogni.com/auth/login",
-    "category": "Webapps"
-  },
-  {
-    "title": "OneDrive",
-    "url": "https://onedrive.live.com",
-    "category": "Webapps"
-  },
-  {
-    "title": "Proton Drive",
-    "url": "https://drive.proton.me",
-    "category": "Webapps"
-  },
-  {
-    "title": "Spotify",
-    "url": "https://open.spotify.com",
-    "category": "Webapps"
-  },
-  {
-    "title": "Standard Notes",
-    "url": "https://app.standardnotes.com",
-    "category": "Webapps"
-  },
-  {
-    "title": "Bookstr",
-    "url": "https://bookstr.xyz",
-    "category": "Nostr"
-  },
-  {
-    "title": "Nostr",
-    "url": "https://nostr.com",
-    "category": "Nostr"
-  },
-  {
-    "title": "Nostrplebs",
-    "url": "https://nostrplebs.com",
-    "category": "Nostr"
-  },
-  {
-    "title": "Shakespeare",
-    "url": "https://shakespeare.diy/",
-    "category": "Nostr"
-  },
-  {
-    "title": "Amazon",
-    "url": "https://www.amazon.co.uk",
-    "category": "Shopping"
-  },
-  {
-    "title": "Classic Tools",
-    "url": "https://www.classichandtools.com",
-    "category": "Shopping"
-  },
-  {
-    "title": "Coal shop",
-    "url": "https://supaheatfuels.co.uk",
-    "category": "Shopping"
-  },
-  {
-    "title": "Honest Grapes",
-    "url": "https://www.honestgrapes.co.uk/account/login?return_url=%2Faccount",
-    "category": "Shopping"
-  },
-  {
-    "title": "Nespresso",
-    "url": "https://www.nespresso.com/uk/en",
-    "category": "Shopping"
-  },
-  {
-    "title": "Putnams",
-    "url": "https://putnams.co.uk",
-    "category": "Shopping"
-  },
-  {
-    "title": "Tea Shop",
-    "url": "https://www.exoticteapot.co.uk",
-    "category": "Shopping"
-  },
-  {
-    "title": "Wood Supplier - Lekto",
-    "url": "https://www.lektowoodfuels.co.uk/",
-    "category": "Shopping"
-  },
-  {
-    "title": "Airbnb",
-    "url": "https://www.airbnb.co.uk",
-    "category": "Travel"
-  },
-  {
-    "title": "BA.com",
-    "url": "https://www.ba.com",
-    "category": "Travel"
-  },
-  {
-    "title": "Booking.com",
-    "url": "https://www.booking.com",
-    "category": "Travel"
-  },
-  {
-    "title": "British Pilgrimages",
-    "url": "https://www.britishpilgrimage.org",
-    "category": "Travel"
-  },
-  {
-    "title": "Easyjet",
-    "url": "https://www.easyjet.com/en",
-    "category": "Travel"
-  },
-  {
-    "title": "Enterprise Car Hire",
-    "url": "https://www.enterprise.co.uk/en",
-    "category": "Travel"
-  },
-  {
-    "title": "Flight Radar",
-    "url": "https://www.flightradar24.com",
-    "category": "Travel"
-  },
-  {
-    "title": "Google Flights",
-    "url": "https://www.google.com/travel",
-    "category": "Travel"
-  },
-  {
-    "title": "Holiday Cottages",
-    "url": "https://www.cottages.com",
-    "category": "Travel"
-  },
-  {
-    "title": "i-escape",
-    "url": "https://www.i-escape.com",
-    "category": "Travel"
-  },
-  {
-    "title": "Manchester Airport Parking",
-    "url": "https://www.manchesterairport.co.uk/booking",
-    "category": "Travel"
-  },
-  {
-    "title": "Olhao Appartments",
-    "url": "https://www.whiteterraces.com",
-    "category": "Travel"
-  },
-  {
-    "title": "Olhao Convento",
-    "url": "https://www.conventoolhao.com/book",
-    "category": "Travel"
-  },
-  {
-    "title": "Ryanair",
-    "url": "https://www.ryanair.com",
-    "category": "Travel"
-  },
-  {
-    "title": "Sawdays",
-    "url": "https://www.sawdays.co.uk",
-    "category": "Travel"
-  },
-  {
-    "title": "Seat Spy",
-    "url": "https://www.seatspy.com",
-    "category": "Travel"
-  },
-  {
-    "title": "Trainline",
-    "url": "https://www.thetrainline.com",
-    "category": "Travel"
-  },
-  {
-    "title": "Unique Home Stays cottages",
-    "url": "https://www.uniquehomestays.com",
-    "category": "Travel"
-  },
-  {
-    "title": "With Locals",
-    "url": "https://www.withlocals.com",
-    "category": "Travel"
-  },
-  {
-    "title": "Blockchain Site",
-    "url": "https://andersbrownworth.com/blockchain",
-    "category": "Finance"
-  },
-  {
-    "title": "Bonner PR",
-    "url": "https://www.bonnerprivateresearch.com",
-    "category": "Finance"
-  },
-  {
-    "title": "Bytetree",
-    "url": "https://www.bytetree.com/the-multi-asset-investor",
-    "category": "Finance"
-  },
-  {
-    "title": "Chards",
-    "url": "https://www.chards.co.uk",
-    "category": "Finance"
-  },
-  {
-    "title": "Coinbase",
-    "url": "https://www.coinbase.com/en-gb/explore",
-    "category": "Finance"
-  },
-  {
-    "title": "Epsilon Theory",
-    "url": "https://www.epsilontheory.com",
-    "category": "Finance"
-  },
-  {
-    "title": "Famers Fable",
-    "url": "https://www.farmersfable.org",
-    "category": "Finance"
-  },
-  {
-    "title": "Halifax",
-    "url": "https://share-dealing.halifaxsharedealing-online.co.uk",
-    "category": "Finance"
-  },
-  {
-    "title": "HL",
-    "url": "https://www.hl.co.uk/shares",
-    "category": "Finance"
-  },
-  {
-    "title": "Interactive Brokers",
-    "url": "https://www.interactivebrokers.co.uk/portal/#/dashboard/positions",
-    "category": "Finance"
-  },
-  {
-    "title": "Myrmikan",
-    "url": "http://www.myrmikan.com/port",
-    "category": "Finance"
-  },
-  {
-    "title": "Naval",
-    "url": "https://nav.al",
-    "category": "Finance"
-  },
-  {
-    "title": "Southbank",
-    "url": "https://www.southbankresearch.com",
-    "category": "Finance"
-  },
-  {
-    "title": "Taleb",
-    "url": "https://fooledbyrandomness.com",
-    "category": "Finance"
-  },
-  {
-    "title": "Admiral Insurance",
-    "url": "https://www.admiral.com",
-    "category": "Banking & Insurance"
-  },
-  {
-    "title": "Aviva Insurance",
-    "url": "https://www.aviva.co.uk",
-    "category": "Banking & Insurance"
-  },
-  {
-    "title": "Bank",
-    "url": "http://www1.firstdirect.com",
-    "category": "Banking & Insurance"
-  },
-  {
-    "title": "Churchill Insurance",
-    "url": "https://www.churchill.com",
-    "category": "Banking & Insurance"
-  },
-  {
-    "title": "Hire Car Excess Insurance",
-    "url": "https://www.carhireexcess.com",
-    "category": "Banking & Insurance"
-  },
-  {
-    "title": "ripe - Dinghy Insurance",
-    "url": "https://www.ripeinsurance.co.uk/login",
-    "category": "Banking & Insurance"
-  },
-  {
-    "title": "Teachers Pension",
-    "url": "https://www.teacherspensions.co.uk/members/member-login.aspx",
-    "category": "Banking & Insurance"
-  },
-  {
-    "title": "Gov.uk",
-    "url": "https://www.access.service.gov.uk/login/signin/creds",
-    "category": "Gov"
-  },
-  {
-    "title": "HM Land Registry",
-    "url": "https://propertyalert.landregistry.gov.uk/propertyalert/myalerts/entry?SignIn=Sign+in",
-    "category": "Gov"
-  },
-  {
-    "title": "Student Finance",
-    "url": "https://logon.slc.co.uk/welcome/secured/login?_locale=en_GB&cookieConsent=accept",
-    "category": "Gov"
-  },
-  {
-    "title": "Teacher Pensions",
-    "url": "https://www.teacherspensions.co.uk/members/member-login.aspx",
-    "category": "Gov"
-  },
-  {
-    "title": "BT Broadband",
-    "url": "https://www.BT.com",
-    "category": "Home / Utilities"
-  },
-  {
-    "title": "Lebara Mobiles",
-    "url": "https://www.lebara.co.uk/en/home.html",
-    "category": "Home / Utilities"
-  },
-  {
-    "title": "Octopus Energy",
-    "url": "https://octopus.energy",
-    "category": "Home / Utilities"
-  },
-  {
-    "title": "TV License",
-    "url": "https://www.tvlicensing.co.uk/yourlicense",
-    "category": "Home / Utilities"
-  },
-  {
-    "title": "Craig Roberts Photography",
-    "url": "https://craigrobertsphotography.co.uk",
-    "category": "Photography"
-  },
-  {
-    "title": "Fasthosts login",
-    "url": "https://admin.fasthosts.co.uk",
-    "category": "Photography"
-  },
-  {
-    "title": "Simlab Photos",
-    "url": "https://www.simlab.co.uk",
-    "category": "Photography"
-  },
-  {
-    "title": "Wordpress",
-    "url": "https://wordpress.com/log-in/",
-    "category": "Photography"
-  },
-  {
-    "title": "X-T4 Manual",
-    "url": "https://fujifilm-dsc.com/en/manual/x-t4",
-    "category": "Photography"
-  },
-  {
-    "title": "Carl Chapman",
-    "url": "https://www.carlchapman.co.uk",
-    "category": "Jung"
-  },
-  {
-    "title": "Cecile Buckenmeyer",
-    "url": "https://www.cecilebuckenmeyer.co.uk",
-    "category": "Jung"
-  },
-  {
-    "title": "igap",
-    "url": "https://www.igap.co.uk",
-    "category": "Jung"
-  },
-  {
-    "title": "Jung Institute",
-    "url": "https://www.junginstitut.ch/en",
-    "category": "Jung"
-  },
-  {
-    "title": "Mark Saban",
-    "url": "http://www.marksaban.co.uk/index.html",
-    "category": "Jung"
-  },
-  {
-    "title": "Speaking of Jung",
-    "url": "https://speakingofjung.com",
-    "category": "Jung"
-  },
-  {
-    "title": "Cholesterol Converter",
-    "url": "https://www.omnicalculator.com/health/cholesterol-units",
-    "category": "Health"
-  },
-  {
-    "title": "Doctor",
-    "url": "https://www.thependlemedicalpartnership.nhs.uk",
-    "category": "Health"
-  },
-  {
-    "title": "Food for the brain",
-    "url": "https://foodforthebrain.org",
-    "category": "Health"
-  },
-  {
-    "title": "Physio",
-    "url": "https://www.theperformance-lab.co.uk",
-    "category": "Health"
-  },
-  {
-    "title": "PSA Test",
-    "url": "https://bkpca.mypsatests.org.uk/Login",
-    "category": "Health"
-  },
-  {
-    "title": "Suppliments - Royal Oak",
-    "url": "https://royaloakhealth.co.uk",
-    "category": "Health"
-  }
-]
-;
-const STORAGE_KEY = "links_overlay";
-let baseLinks = LINKS_DATA;
+var CATS = ["Frequent links","Media / Entertainment","Webapps","Nostr","Shopping","Travel","Finance","Banking & Insurance","Gov","Home / Utilities","Photography","Jung","Health"];
+var STOR = "links_overlay";
+var base = BASE_LINKS;
 
-// ===== Overlay logic =====
-function getOverlay() {
-  try { var raw = localStorage.getItem(STORAGE_KEY); return raw ? JSON.parse(raw) : { added: [], removed: [] }; }
-  catch (e) { return { added: [], removed: [] }; }
+function gOv() { try { var r=localStorage.getItem(STOR); return r?JSON.parse(r):{added:[],removed:[]}; } catch(e) { return {added:[],removed:[]}; } }
+function sOv(o) { localStorage.setItem(STOR,JSON.stringify(o)); }
+function lk(l) { return l.title+"|||"+l.url; }
+function gLinks() {
+  var o=gOv(), rk=new Set(o.removed.map(lk)), e=base.filter(function(l){return!rk.has(lk(l));});
+  for(var i=0;i<o.added.length;i++) e.push(o.added[i]); return e;
 }
-function saveOverlay(ov) { localStorage.setItem(STORAGE_KEY, JSON.stringify(ov)); }
-function linkKey(l) { return l.title + "|||" + l.url; }
-
-function getEffectiveLinks() {
-  if (!baseLinks) return [];
-  var ov = getOverlay();
-  var removedKeys = new Set(ov.removed.map(linkKey));
-  var effective = baseLinks.filter(function(l) { return !removedKeys.has(linkKey(l)); });
-  for (var i = 0; i < ov.added.length; i++) effective.push(ov.added[i]);
-  return effective;
-}
-
-function addLink(title, url, category) {
-  var ov = getOverlay();
-  ov.added.push({ title: title.trim(), url: url.trim(), category: category });
-  saveOverlay(ov);
-  render();
-}
-
-function deleteLink(index) {
-  var links = getEffectiveLinks();
-  var link = links[index];
-  if (!link) return;
-  var key = linkKey(link);
-  var ov = getOverlay();
-  var addedIdx = -1;
-  for (var i = 0; i < ov.added.length; i++) { if (linkKey(ov.added[i]) === key) { addedIdx = i; break; } }
-  if (addedIdx >= 0) { ov.added.splice(addedIdx, 1); }
-  else { ov.removed.push({ title: link.title, url: link.url }); }
-  saveOverlay(ov);
-  render();
-}
-
-// ===== Export / Import =====
+function addLink(t,u,c) { var o=gOv(); o.added.push({title:t.trim(),url:u.trim(),category:c}); sOv(o); render(); }
+function delLink(i) { var ls=gLinks(), l=ls[i]; if(!l)return; var k=lk(l), o=gOv(), ai=-1;
+  for(var j=0;j<o.added.length;j++){if(lk(o.added[j])===k){ai=j;break;}}
+  if(ai>=0) o.added.splice(ai,1); else o.removed.push({title:l.title,url:l.url}); sOv(o); render(); }
 function exportJSON() {
-  var links = getEffectiveLinks();
-  var blob = new Blob([JSON.stringify(links, null, 2)], { type: "application/json" });
-  var a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "links.json";
-  a.click();
-  URL.revokeObjectURL(a.href);
+  var ls=gLinks(), b=new Blob([JSON.stringify(ls,null,2)],{type:"application/json"}), a=document.createElement("a");
+  a.href=URL.createObjectURL(b); a.download="links.json"; a.click(); URL.revokeObjectURL(a.href);
 }
-
-function importJSON(file) {
-  var reader = new FileReader();
-  reader.onload = function() {
-    try {
-      var imported = JSON.parse(reader.result);
-      if (!Array.isArray(imported)) { alert("Invalid format: expected an array."); return; }
-      if (!confirm("This will replace your current links with the imported file. Continue?")) return;
-      baseLinks = imported;
-      saveOverlay({ added: [], removed: [] });
-      render();
-    } catch (e) { alert("Could not parse the file as JSON."); }
-  };
-  reader.readAsText(file);
-}
-
-// ===== Render =====
+function importJSON(f) { var r=new FileReader(); r.onload=function(){
+  try{var d=JSON.parse(r.result);if(!Array.isArray(d)){alert("Invalid format.");return;}
+  if(!confirm("Replace all links with imported file?"))return;base=d;sOv({added:[],removed:[]});render();}
+  catch(e){alert("Could not parse JSON.");}}; r.readAsText(f); }
 function render() {
-  var links = getEffectiveLinks();
-  var tocList = document.getElementById("toc-list");
-  tocList.innerHTML = CATEGORY_ORDER.map(function(c) { return '<li><a href="#' + encodeURIComponent(c) + '">' + escHtml(c) + '</a></li>'; }).join("");
-
-  var container = document.getElementById("links-container");
-  var html = "";
-  for (var ci = 0; ci < CATEGORY_ORDER.length; ci++) {
-      var cat = CATEGORY_ORDER[ci];
-      html += '<h5 id="' + encodeURIComponent(cat) + '">' + escHtml(cat) + '</h5>\n';
-      var catLinks = [];
-      for (var i = 0; i < links.length; i++) { if (links[i].category === cat) catLinks.push({ link: links[i], idx: i }); }
-      if (catLinks.length === 0) { html += '<p class="empty-category">No links yet.</p>\n'; }
-      else {
-        for (var j = 0; j < catLinks.length; j++) {
-          var l = catLinks[j];
-          html += '<span class="link-row"><a href="' + escAttr(l.link.url) + '" target="_blank">' + escHtml(l.link.title) + '</a><button class="del-btn" data-idx="' + l.idx + '" title="Remove">&times;</button></span><br>\n';
-        }
-      }
-    }
+  var ls=gLinks();
+  document.getElementById("toc-list").innerHTML = CATS.map(function(c){return'<li><a href="#'+encodeURIComponent(c)+'">'+escH(c)+'</a></li>';}).join("");
+  var h="",c=document.getElementById("links-container");
+  for(var ci=0;ci<CATS.length;ci++){var ct=CATS[ci], cl=[];
+    h+='<h5 id="'+encodeURIComponent(ct)+'">'+escH(ct)+'</h5>\n';
+    for(var i=0;i<ls.length;i++){if(ls[i].category===ct)cl.push({l:ls[i],idx:i});}
+    if(cl.length===0)h+='<p class="empty-category">No links yet.</p>\n';
+    else for(var j=0;j<cl.length;j++){var x=cl[j];
+      h+='<span class="link-row"><a href="'+escA(x.l.url)+'" target="_blank">'+escH(x.l.title)+'</a><button class="del-btn" data-idx="'+x.idx+'" title="Remove">&times;</button></span><br>\n';}
   }
-  container.innerHTML = html;
-
-  var select = document.getElementById("link-category");
-  select.innerHTML = CATEGORY_ORDER.map(function(c) { return '<option value="' + escAttr(c) + '">' + escHtml(c) + '</option>'; }).join("");
-
-  var btns = container.querySelectorAll(".del-btn");
-  for (var b = 0; b < btns.length; b++) {
-    btns[b].addEventListener("click", function() { if (confirm("Remove this link?")) deleteLink(parseInt(this.dataset.idx)); });
-  }
+  c.innerHTML=h;
+  document.getElementById("link-category").innerHTML = CATS.map(function(x){return'<option value="'+escA(x)+'">'+escH(x)+'</option>';}).join("");
+  var bs=c.querySelectorAll(".del-btn"); for(var b=0;b<bs.length;b++){bs[b].onclick=function(){if(confirm("Remove this link?"))delLink(parseInt(this.dataset.idx));};}
 }
-
-// ===== Helpers =====
-function escHtml(s) { var d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
-function escAttr(s) { return s.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
-
-// ===== Init =====
-document.addEventListener("DOMContentLoaded", function() {
+function escH(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML;}
+function escA(s){return s.replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+document.addEventListener("DOMContentLoaded",function(){
   render();
-
-  document.getElementById("toggle-edit").addEventListener("click", function() {
-    document.body.classList.toggle("editing");
-    this.textContent = document.body.classList.contains("editing") ? "Done Editing" : "Edit Links";
-  });
-
-  document.getElementById("btn-add").addEventListener("click", function() {
-    var title = document.getElementById("link-title").value.trim();
-    var url = document.getElementById("link-url").value.trim();
-    var cat = document.getElementById("link-category").value;
-    if (!title) { alert("Please enter a title."); return; }
-    if (!url) { alert("Please enter a URL."); return; }
-    if (!/^https?:\/\/.+/i.test(url)) { alert("URL must start with http:// or https://"); return; }
-    addLink(title, url, cat);
-    document.getElementById("link-title").value = "";
-    document.getElementById("link-url").value = "https://";
-  });
-
-  document.getElementById("link-url").addEventListener("keydown", function(e) { if (e.key === "Enter") document.getElementById("btn-add").click(); });
-  document.getElementById("link-title").addEventListener("keydown", function(e) { if (e.key === "Enter") document.getElementById("btn-add").click(); });
-  document.getElementById("btn-export").addEventListener("click", exportJSON);
-  var fi = document.getElementById("import-file");
-  document.getElementById("btn-import").addEventListener("click", function() { fi.click(); });
-  fi.addEventListener("change", function() { if (fi.files[0]) importJSON(fi.files[0]); fi.value = ""; });
+  document.getElementById("toggle-edit").onclick=function(){document.body.classList.toggle("editing");this.textContent=document.body.classList.contains("editing")?"Done Editing":"Edit Links";};
+  document.getElementById("btn-add").onclick=function(){
+    var t=document.getElementById("link-title").value.trim(), u=document.getElementById("link-url").value.trim(), c=document.getElementById("link-category").value;
+    if(!t){alert("Please enter a title.");return;} if(!u){alert("Please enter a URL.");return;} if(!/^https?:\/\/.+/i.test(u)){alert("URL must start with http:// or https://");return;}
+    addLink(t,u,c); document.getElementById("link-title").value=""; document.getElementById("link-url").value="https://";
+  };
+  document.getElementById("link-url").onkeydown=function(e){if(e.key==="Enter")document.getElementById("btn-add").click();};
+  document.getElementById("link-title").onkeydown=function(e){if(e.key==="Enter")document.getElementById("btn-add").click();};
+  document.getElementById("btn-export").onclick=exportJSON;
+  var fi=document.getElementById("import-file");
+  document.getElementById("btn-import").onclick=function(){fi.click();};
+  fi.onchange=function(){if(fi.files[0])importJSON(fi.files[0]);fi.value="";};
 });
 </script>
 </body>
