@@ -55,7 +55,7 @@
     <button id="toggle-edit">Edit Links</button>
 
     <div id="io-buttons" class="edit-ui">
-      <button id="btn-export">Export JSON</button>
+      <button id="btn-export">Save to File</button>
       <button id="btn-import">Import JSON</button>
       <input type="file" id="import-file" accept=".json" style="display:none">
     </div>
@@ -194,9 +194,18 @@ function addLink(t,u,c) { var o=gOv(); o.added.push({title:t.trim(),url:u.trim()
 function delLink(i) { var ls=gLinks(), l=ls[i]; if(!l)return; var k=lk(l), o=gOv(), ai=-1;
   for(var j=0;j<o.added.length;j++){if(lk(o.added[j])===k){ai=j;break;}}
   if(ai>=0) o.added.splice(ai,1); else o.removed.push({title:l.title,url:l.url}); sOv(o); render(); }
-function exportJSON() {
-  var ls=gLinks(), b=new Blob([JSON.stringify(ls,null,2)],{type:"application/json"}), a=document.createElement("a");
-  a.href=URL.createObjectURL(b); a.download="links.json"; a.click(); URL.revokeObjectURL(a.href);
+function saveToFile() {
+  var ls=gLinks(), lines=[], push=function(s){lines.push(s);};
+  for(var i=0;i<ls.length;i++){
+    var l=ls[i], t=JSON.stringify(l.title), u=JSON.stringify(l.url), c=JSON.stringify(l.category);
+    if(i<ls.length-1) push('  {"title":'+t+',"url":'+u+',"category":'+c+'},');
+    else push('  {"title":'+t+',"url":'+u+',"category":'+c+'}');
+  }
+  var newData=lines.join('\n'), html=document.documentElement.outerHTML;
+  var re=/var BASE_LINKS = \[[\s\S]*?\n\];/;
+  html=html.replace(re,'var BASE_LINKS = [\n'+newData+'\n];');
+  var b=new Blob([html],{type:"text/html"}), a=document.createElement("a");
+  a.href=URL.createObjectURL(b); a.download="index.html"; a.click(); URL.revokeObjectURL(a.href);
 }
 function importJSON(f) { var r=new FileReader(); r.onload=function(){
   try{var d=JSON.parse(r.result);if(!Array.isArray(d)){alert("Invalid format.");return;}
@@ -229,7 +238,7 @@ document.addEventListener("DOMContentLoaded",function(){
   };
   document.getElementById("link-url").onkeydown=function(e){if(e.key==="Enter")document.getElementById("btn-add").click();};
   document.getElementById("link-title").onkeydown=function(e){if(e.key==="Enter")document.getElementById("btn-add").click();};
-  document.getElementById("btn-export").onclick=exportJSON;
+  document.getElementById("btn-export").onclick=saveToFile;
   var fi=document.getElementById("import-file");
   document.getElementById("btn-import").onclick=function(){fi.click();};
   fi.onchange=function(){if(fi.files[0])importJSON(fi.files[0]);fi.value="";};
