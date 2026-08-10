@@ -1,0 +1,375 @@
+<html lang="en"><head><script src="/__injected__/preview.js"></script>
+  <title>Links</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://stackedit.io/style.css">
+  <style>
+    #add-link-form {
+      background: #f5f5f5; border: 1px solid #ddd; border-radius: 6px;
+      padding: 14px 16px; margin-bottom: 20px;
+    }
+    #add-link-form h5 { margin: 0 0 10px 0; }
+    #add-link-form label { display: block; font-size: 0.85em; margin-bottom: 2px; color: #555; }
+    #add-link-form input, #add-link-form select {
+      width: 100%; padding: 6px 8px; margin-bottom: 8px;
+      border: 1px solid #ccc; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;
+    }
+    #add-link-form button {
+      padding: 6px 16px; background: #4078c0; color: #fff;
+      border: none; border-radius: 4px; cursor: pointer; font-size: 0.9em;
+    }
+    .link-row { display: inline-flex; align-items: center; gap: 4px; margin-right: 6px; }
+    .link-row .del-btn {
+      width: 18px; height: 18px; line-height: 16px; text-align: center; font-size: 14px;
+      font-weight: bold; color: #c00; background: none; border: 1px solid transparent;
+      border-radius: 50%; cursor: pointer; padding: 0; opacity: 0.35; flex-shrink: 0;
+    }
+    .link-row:hover .del-btn { opacity: 1; border-color: #c00; }
+    .link-row .del-btn:hover { background: #fee; }
+    #toggle-edit {
+      padding: 4px 12px; background: #f0f0f0; border: 1px solid #ccc;
+      border-radius: 4px; cursor: pointer; font-size: 0.85em; margin-bottom: 16px;
+    }
+    .edit-ui { display: none; }
+    body.editing .edit-ui { display: block; }
+    body.editing .link-row .del-btn { display: inline-block; }
+    .link-row .del-btn { display: none; }
+    .empty-category { color: #999; font-style: italic; font-size: 0.9em; }
+    #io-buttons { margin-bottom: 12px; display: none; }
+    body.editing #io-buttons { display: block; }
+    #io-buttons button {
+      padding: 4px 10px; background: #f0f0f0; border: 1px solid #ccc;
+      border-radius: 4px; cursor: pointer; font-size: 0.8em; margin-right: 6px;
+    }
+  </style>
+</head>
+<body class="stackedit">
+<div class="stackedit__left">
+  <div class="stackedit__toc"><ul><li><a href="#Links">Links</a><ul id="toc-list"><li><a href="#Frequent%20links">Frequent links</a></li><li><a href="#Media%20%2F%20Entertainment">Media / Entertainment</a></li><li><a href="#Webapps">Webapps</a></li><li><a href="#Nostr">Nostr</a></li><li><a href="#Shopping">Shopping</a></li><li><a href="#Travel">Travel</a></li><li><a href="#Finance">Finance</a></li><li><a href="#Banking%20%26%20Insurance">Banking &amp; Insurance</a></li><li><a href="#Gov">Gov</a></li><li><a href="#Home%20%2F%20Utilities">Home / Utilities</a></li><li><a href="#Photography">Photography</a></li><li><a href="#Jung">Jung</a></li><li><a href="#Health">Health</a></li></ul></li></ul></div>
+</div>
+<div class="stackedit__right">
+  <div class="stackedit__html">
+    <h4 id="Links">Links</h4>
+    <button id="toggle-edit">Done Editing</button>
+
+    <div id="io-buttons" class="edit-ui">
+      <button id="btn-export">Save to File</button>
+      <button id="btn-import">Import JSON</button>
+      <input type="file" id="import-file" accept=".json" style="display:none">
+    </div>
+
+    <div id="add-link-form" class="edit-ui">
+      <h5>Add a Link</h5>
+      <label for="link-title">Title</label>
+      <input type="text" id="link-title" placeholder="e.g. Example Site">
+      <label for="link-url">URL</label>
+      <input type="url" id="link-url" placeholder="https://example.com" value="https://">
+      <label for="link-category">Category</label>
+      <select id="link-category"><option value="Frequent links">Frequent links</option><option value="Media / Entertainment">Media / Entertainment</option><option value="Webapps">Webapps</option><option value="Nostr">Nostr</option><option value="Shopping">Shopping</option><option value="Travel">Travel</option><option value="Finance">Finance</option><option value="Banking &amp; Insurance">Banking &amp; Insurance</option><option value="Gov">Gov</option><option value="Home / Utilities">Home / Utilities</option><option value="Photography">Photography</option><option value="Jung">Jung</option><option value="Health">Health</option></select>
+      <button id="btn-add">Add Link</button>
+    </div>
+
+    <div id="links-container"><h5 id="Frequent%20links">Frequent links</h5>
+<span class="link-row"><a href="https://jqw22.github.io/cwtext/" target="_blank">App - CW notes</a><button class="del-btn" data-idx="21" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://jqw22.github.io/cwtext/" target="_blank">App - CW notes</a><button class="del-btn" data-idx="22" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://jqw22.github.io/dance/" target="_blank">App - Dance videos</a><button class="del-btn" data-idx="23" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://jqw22.github.io/dance/" target="_blank">App - Dance videos</a><button class="del-btn" data-idx="24" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://jqw22.github.io/notebook/" target="_blank">App - Simple Notes</a><button class="del-btn" data-idx="25" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://jqw22.github.io/notebook/" target="_blank">App - Simple Notes</a><button class="del-btn" data-idx="26" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.google.com/maps" target="_blank">Google Maps</a><button class="del-btn" data-idx="27" title="Remove">×</button></span><br>
+<span class="link-row"><a href="http://www.jamesdewhurst.uk" target="_blank">jamesdewhurst.uk</a><button class="del-btn" data-idx="28" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://lolesports.com/en-GB/leagues/first_stand,lck,lec,msi,worlds" target="_blank">League of Legends</a><button class="del-btn" data-idx="29" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://lolesports.com/en-GB/leagues/first_stand,lck,lec,msi,worlds" target="_blank">League of Legends</a><button class="del-btn" data-idx="30" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://login.microsoftonline.com" target="_blank">REM email</a><button class="del-btn" data-idx="31" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.3r.org.uk/auth" target="_blank">Three Rings</a><button class="del-btn" data-idx="32" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.youtube.com" target="_blank">YouTube</a><button class="del-btn" data-idx="33" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.youtube.com" target="_blank">YouTube</a><button class="del-btn" data-idx="34" title="Remove">×</button></span><br>
+<h5 id="Media%20%2F%20Entertainment">Media / Entertainment</h5>
+<p class="empty-category">No links yet.</p>
+<h5 id="Webapps">Webapps</h5>
+<span class="link-row"><a href="https://www.icloud.com" target="_blank">Apple icloud</a><button class="del-btn" data-idx="94" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://archive.org" target="_blank">Archive Books</a><button class="del-btn" data-idx="95" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.drawio.com" target="_blank">DrawIO</a><button class="del-btn" data-idx="96" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://ident.familysearch.org/identity/login/?state=https://www.familysearch.org/en/united-kingdom/" target="_blank">Family Search</a><button class="del-btn" data-idx="97" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.ilovepdf.com" target="_blank">iLovePDF</a><button class="del-btn" data-idx="98" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://incogni.com/auth/login" target="_blank">Incogni</a><button class="del-btn" data-idx="99" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://onedrive.live.com" target="_blank">OneDrive</a><button class="del-btn" data-idx="100" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://drive.proton.me" target="_blank">Proton Drive</a><button class="del-btn" data-idx="101" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://open.spotify.com" target="_blank">Spotify</a><button class="del-btn" data-idx="102" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://app.standardnotes.com" target="_blank">Standard Notes</a><button class="del-btn" data-idx="103" title="Remove">×</button></span><br>
+<h5 id="Nostr">Nostr</h5>
+<span class="link-row"><a href="https://bookstr.xyz" target="_blank">Bookstr</a><button class="del-btn" data-idx="55" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://app.builderlab.xyz/buzz" target="_blank">Buzz Communities</a><button class="del-btn" data-idx="56" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://app.builderlab.xyz/buzz" target="_blank">Buzz Communities</a><button class="del-btn" data-idx="57" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://github.com/jqw22" target="_blank">GitHub</a><button class="del-btn" data-idx="58" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://nostr.com" target="_blank">Nostr</a><button class="del-btn" data-idx="59" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://nostrplebs.com" target="_blank">Nostrplebs</a><button class="del-btn" data-idx="60" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://shakespeare.diy/" target="_blank">Shakespeare</a><button class="del-btn" data-idx="61" title="Remove">×</button></span><br>
+<h5 id="Shopping">Shopping</h5>
+<span class="link-row"><a href="https://www.amazon.co.uk" target="_blank">Amazon</a><button class="del-btn" data-idx="67" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.classichandtools.com" target="_blank">Classic Tools</a><button class="del-btn" data-idx="68" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://supaheatfuels.co.uk" target="_blank">Coal shop</a><button class="del-btn" data-idx="69" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.honestgrapes.co.uk/account/login?return_url=%2Faccount" target="_blank">Honest Grapes</a><button class="del-btn" data-idx="70" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.nespresso.com/uk/en" target="_blank">Nespresso</a><button class="del-btn" data-idx="71" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://putnams.co.uk" target="_blank">Putnams</a><button class="del-btn" data-idx="72" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.exoticteapot.co.uk" target="_blank">Tea Shop</a><button class="del-btn" data-idx="73" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.lektowoodfuels.co.uk/" target="_blank">Wood Supplier - Lekto</a><button class="del-btn" data-idx="74" title="Remove">×</button></span><br>
+<h5 id="Travel">Travel</h5>
+<span class="link-row"><a href="https://www.airbnb.co.uk" target="_blank">Airbnb</a><button class="del-btn" data-idx="75" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.ba.com" target="_blank">BA.com</a><button class="del-btn" data-idx="76" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.booking.com" target="_blank">Booking.com</a><button class="del-btn" data-idx="77" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.britishpilgrimage.org" target="_blank">British Pilgrimages</a><button class="del-btn" data-idx="78" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.easyjet.com/en" target="_blank">Easyjet</a><button class="del-btn" data-idx="79" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.enterprise.co.uk/en" target="_blank">Enterprise Car Hire</a><button class="del-btn" data-idx="80" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.flightradar24.com" target="_blank">Flight Radar</a><button class="del-btn" data-idx="81" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.google.com/travel" target="_blank">Google Flights</a><button class="del-btn" data-idx="82" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.cottages.com" target="_blank">Holiday Cottages</a><button class="del-btn" data-idx="83" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.i-escape.com" target="_blank">i-escape</a><button class="del-btn" data-idx="84" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.manchesterairport.co.uk/booking" target="_blank">Manchester Airport Parking</a><button class="del-btn" data-idx="85" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.whiteterraces.com" target="_blank">Olhao Appartments</a><button class="del-btn" data-idx="86" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.conventoolhao.com/book" target="_blank">Olhao Convento</a><button class="del-btn" data-idx="87" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.ryanair.com" target="_blank">Ryanair</a><button class="del-btn" data-idx="88" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.sawdays.co.uk" target="_blank">Sawdays</a><button class="del-btn" data-idx="89" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.seatspy.com" target="_blank">Seat Spy</a><button class="del-btn" data-idx="90" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.thetrainline.com" target="_blank">Trainline</a><button class="del-btn" data-idx="91" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.uniquehomestays.com" target="_blank">Unique Home Stays cottages</a><button class="del-btn" data-idx="92" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.withlocals.com" target="_blank">With Locals</a><button class="del-btn" data-idx="93" title="Remove">×</button></span><br>
+<h5 id="Finance">Finance</h5>
+<span class="link-row"><a href="https://andersbrownworth.com/blockchain" target="_blank">Blockchain Site</a><button class="del-btn" data-idx="7" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.bonnerprivateresearch.com" target="_blank">Bonner PR</a><button class="del-btn" data-idx="8" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.bytetree.com/the-multi-asset-investor" target="_blank">Bytetree</a><button class="del-btn" data-idx="9" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.chards.co.uk" target="_blank">Chards</a><button class="del-btn" data-idx="10" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.coinbase.com/en-gb/explore" target="_blank">Coinbase</a><button class="del-btn" data-idx="11" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.epsilontheory.com" target="_blank">Epsilon Theory</a><button class="del-btn" data-idx="12" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.farmersfable.org" target="_blank">Famers Fable</a><button class="del-btn" data-idx="13" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://share-dealing.halifaxsharedealing-online.co.uk" target="_blank">Halifax</a><button class="del-btn" data-idx="14" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.hl.co.uk/shares" target="_blank">HL</a><button class="del-btn" data-idx="15" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.interactivebrokers.co.uk/portal/#/dashboard/positions" target="_blank">Interactive Brokers</a><button class="del-btn" data-idx="16" title="Remove">×</button></span><br>
+<span class="link-row"><a href="http://www.myrmikan.com/port" target="_blank">Myrmikan</a><button class="del-btn" data-idx="17" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://nav.al" target="_blank">Naval</a><button class="del-btn" data-idx="18" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.southbankresearch.com" target="_blank">Southbank</a><button class="del-btn" data-idx="19" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://fooledbyrandomness.com" target="_blank">Taleb</a><button class="del-btn" data-idx="20" title="Remove">×</button></span><br>
+<h5 id="Banking%20%26%20Insurance">Banking &amp; Insurance</h5>
+<span class="link-row"><a href="https://www.admiral.com" target="_blank">Admiral Insurance</a><button class="del-btn" data-idx="0" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.aviva.co.uk" target="_blank">Aviva Insurance</a><button class="del-btn" data-idx="1" title="Remove">×</button></span><br>
+<span class="link-row"><a href="http://www1.firstdirect.com" target="_blank">Bank</a><button class="del-btn" data-idx="2" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.churchill.com" target="_blank">Churchill Insurance</a><button class="del-btn" data-idx="3" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.carhireexcess.com" target="_blank">Hire Car Excess Insurance</a><button class="del-btn" data-idx="4" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.ripeinsurance.co.uk/login" target="_blank">ripe - Dinghy Insurance</a><button class="del-btn" data-idx="5" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.teacherspensions.co.uk/members/member-login.aspx" target="_blank">Teachers Pension</a><button class="del-btn" data-idx="6" title="Remove">×</button></span><br>
+<h5 id="Gov">Gov</h5>
+<span class="link-row"><a href="https://www.access.service.gov.uk/login/signin/creds" target="_blank">Gov.uk</a><button class="del-btn" data-idx="35" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://propertyalert.landregistry.gov.uk/propertyalert/myalerts/entry?SignIn=Sign+in" target="_blank">HM Land Registry</a><button class="del-btn" data-idx="36" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://logon.slc.co.uk/welcome/secured/login?_locale=en_GB&amp;cookieConsent=accept" target="_blank">Student Finance</a><button class="del-btn" data-idx="37" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.teacherspensions.co.uk/members/member-login.aspx" target="_blank">Teacher Pensions</a><button class="del-btn" data-idx="38" title="Remove">×</button></span><br>
+<h5 id="Home%20%2F%20Utilities">Home / Utilities</h5>
+<span class="link-row"><a href="https://www.BT.com" target="_blank">BT Broadband</a><button class="del-btn" data-idx="45" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.lebara.co.uk/en/home.html" target="_blank">Lebara Mobiles</a><button class="del-btn" data-idx="46" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://octopus.energy" target="_blank">Octopus Energy</a><button class="del-btn" data-idx="47" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.tvlicensing.co.uk/yourlicense" target="_blank">TV License</a><button class="del-btn" data-idx="48" title="Remove">×</button></span><br>
+<h5 id="Photography">Photography</h5>
+<span class="link-row"><a href="https://craigrobertsphotography.co.uk" target="_blank">Craig Roberts Photography</a><button class="del-btn" data-idx="62" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://admin.fasthosts.co.uk" target="_blank">Fasthosts login</a><button class="del-btn" data-idx="63" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.simlab.co.uk" target="_blank">Simlab Photos</a><button class="del-btn" data-idx="64" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://wordpress.com/log-in/" target="_blank">Wordpress</a><button class="del-btn" data-idx="65" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://fujifilm-dsc.com/en/manual/x-t4" target="_blank">X-T4 Manual</a><button class="del-btn" data-idx="66" title="Remove">×</button></span><br>
+<h5 id="Jung">Jung</h5>
+<span class="link-row"><a href="https://www.carlchapman.co.uk" target="_blank">Carl Chapman</a><button class="del-btn" data-idx="49" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.cecilebuckenmeyer.co.uk" target="_blank">Cecile Buckenmeyer</a><button class="del-btn" data-idx="50" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.igap.co.uk" target="_blank">igap</a><button class="del-btn" data-idx="51" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.junginstitut.ch/en" target="_blank">Jung Institute</a><button class="del-btn" data-idx="52" title="Remove">×</button></span><br>
+<span class="link-row"><a href="http://www.marksaban.co.uk/index.html" target="_blank">Mark Saban</a><button class="del-btn" data-idx="53" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://speakingofjung.com" target="_blank">Speaking of Jung</a><button class="del-btn" data-idx="54" title="Remove">×</button></span><br>
+<h5 id="Health">Health</h5>
+<span class="link-row"><a href="https://www.omnicalculator.com/health/cholesterol-units" target="_blank">Cholesterol Converter</a><button class="del-btn" data-idx="39" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.thependlemedicalpartnership.nhs.uk" target="_blank">Doctor</a><button class="del-btn" data-idx="40" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://foodforthebrain.org" target="_blank">Food for the brain</a><button class="del-btn" data-idx="41" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://www.theperformance-lab.co.uk" target="_blank">Physio</a><button class="del-btn" data-idx="42" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://bkpca.mypsatests.org.uk/Login" target="_blank">PSA Test</a><button class="del-btn" data-idx="43" title="Remove">×</button></span><br>
+<span class="link-row"><a href="https://royaloakhealth.co.uk" target="_blank">Suppliments - Royal Oak</a><button class="del-btn" data-idx="44" title="Remove">×</button></span><br>
+</div>
+    <br>
+    <small style="color:#888;">Vibed with <a href="https://shakespeare.diy" target="_blank">Shakespeare</a></small>
+  </div>
+</div>
+<footer></footer>
+<script>
+// This list is auto-synced from links.json
+var BASE_LINKS = [
+  {"title":"Admiral Insurance","url":"https://www.admiral.com","category":"Banking & Insurance"},
+  {"title":"Aviva Insurance","url":"https://www.aviva.co.uk","category":"Banking & Insurance"},
+  {"title":"Bank","url":"http://www1.firstdirect.com","category":"Banking & Insurance"},
+  {"title":"Churchill Insurance","url":"https://www.churchill.com","category":"Banking & Insurance"},
+  {"title":"Hire Car Excess Insurance","url":"https://www.carhireexcess.com","category":"Banking & Insurance"},
+  {"title":"ripe - Dinghy Insurance","url":"https://www.ripeinsurance.co.uk/login","category":"Banking & Insurance"},
+  {"title":"Teachers Pension","url":"https://www.teacherspensions.co.uk/members/member-login.aspx","category":"Banking & Insurance"},
+  {"title":"Blockchain Site","url":"https://andersbrownworth.com/blockchain","category":"Finance"},
+  {"title":"Bonner PR","url":"https://www.bonnerprivateresearch.com","category":"Finance"},
+  {"title":"Bytetree","url":"https://www.bytetree.com/the-multi-asset-investor","category":"Finance"},
+  {"title":"Chards","url":"https://www.chards.co.uk","category":"Finance"},
+  {"title":"Coinbase","url":"https://www.coinbase.com/en-gb/explore","category":"Finance"},
+  {"title":"Epsilon Theory","url":"https://www.epsilontheory.com","category":"Finance"},
+  {"title":"Famers Fable","url":"https://www.farmersfable.org","category":"Finance"},
+  {"title":"Halifax","url":"https://share-dealing.halifaxsharedealing-online.co.uk","category":"Finance"},
+  {"title":"HL","url":"https://www.hl.co.uk/shares","category":"Finance"},
+  {"title":"Interactive Brokers","url":"https://www.interactivebrokers.co.uk/portal/#/dashboard/positions","category":"Finance"},
+  {"title":"Myrmikan","url":"http://www.myrmikan.com/port","category":"Finance"},
+  {"title":"Naval","url":"https://nav.al","category":"Finance"},
+  {"title":"Southbank","url":"https://www.southbankresearch.com","category":"Finance"},
+  {"title":"Taleb","url":"https://fooledbyrandomness.com","category":"Finance"},
+  {"title":"App - CW notes","url":"https://jqw22.github.io/cwtext/","category":"Frequent links"},
+  {"title":"App - CW notes","url":"https://jqw22.github.io/cwtext/","category":"Frequent links"},
+  {"title":"App - Dance videos","url":"https://jqw22.github.io/dance/","category":"Frequent links"},
+  {"title":"App - Dance videos","url":"https://jqw22.github.io/dance/","category":"Frequent links"},
+  {"title":"App - Simple Notes","url":"https://jqw22.github.io/notebook/","category":"Frequent links"},
+  {"title":"App - Simple Notes","url":"https://jqw22.github.io/notebook/","category":"Frequent links"},
+  {"title":"Google Maps","url":"https://www.google.com/maps","category":"Frequent links"},
+  {"title":"jamesdewhurst.uk","url":"http://www.jamesdewhurst.uk","category":"Frequent links"},
+  {"title":"League of Legends","url":"https://lolesports.com/en-GB/leagues/first_stand,lck,lec,msi,worlds","category":"Frequent links"},
+  {"title":"League of Legends","url":"https://lolesports.com/en-GB/leagues/first_stand,lck,lec,msi,worlds","category":"Frequent links"},
+  {"title":"REM email","url":"https://login.microsoftonline.com","category":"Frequent links"},
+  {"title":"Three Rings","url":"https://www.3r.org.uk/auth","category":"Frequent links"},
+  {"title":"YouTube","url":"https://www.youtube.com","category":"Frequent links"},
+  {"title":"YouTube","url":"https://www.youtube.com","category":"Frequent links"},
+  {"title":"Gov.uk","url":"https://www.access.service.gov.uk/login/signin/creds","category":"Gov"},
+  {"title":"HM Land Registry","url":"https://propertyalert.landregistry.gov.uk/propertyalert/myalerts/entry?SignIn=Sign+in","category":"Gov"},
+  {"title":"Student Finance","url":"https://logon.slc.co.uk/welcome/secured/login?_locale=en_GB&cookieConsent=accept","category":"Gov"},
+  {"title":"Teacher Pensions","url":"https://www.teacherspensions.co.uk/members/member-login.aspx","category":"Gov"},
+  {"title":"Cholesterol Converter","url":"https://www.omnicalculator.com/health/cholesterol-units","category":"Health"},
+  {"title":"Doctor","url":"https://www.thependlemedicalpartnership.nhs.uk","category":"Health"},
+  {"title":"Food for the brain","url":"https://foodforthebrain.org","category":"Health"},
+  {"title":"Physio","url":"https://www.theperformance-lab.co.uk","category":"Health"},
+  {"title":"PSA Test","url":"https://bkpca.mypsatests.org.uk/Login","category":"Health"},
+  {"title":"Suppliments - Royal Oak","url":"https://royaloakhealth.co.uk","category":"Health"},
+  {"title":"BT Broadband","url":"https://www.BT.com","category":"Home / Utilities"},
+  {"title":"Lebara Mobiles","url":"https://www.lebara.co.uk/en/home.html","category":"Home / Utilities"},
+  {"title":"Octopus Energy","url":"https://octopus.energy","category":"Home / Utilities"},
+  {"title":"TV License","url":"https://www.tvlicensing.co.uk/yourlicense","category":"Home / Utilities"},
+  {"title":"Carl Chapman","url":"https://www.carlchapman.co.uk","category":"Jung"},
+  {"title":"Cecile Buckenmeyer","url":"https://www.cecilebuckenmeyer.co.uk","category":"Jung"},
+  {"title":"igap","url":"https://www.igap.co.uk","category":"Jung"},
+  {"title":"Jung Institute","url":"https://www.junginstitut.ch/en","category":"Jung"},
+  {"title":"Mark Saban","url":"http://www.marksaban.co.uk/index.html","category":"Jung"},
+  {"title":"Speaking of Jung","url":"https://speakingofjung.com","category":"Jung"},
+  {"title":"Bookstr","url":"https://bookstr.xyz","category":"Nostr"},
+  {"title":"Buzz Communities","url":"https://app.builderlab.xyz/buzz","category":"Nostr"},
+  {"title":"Buzz Communities","url":"https://app.builderlab.xyz/buzz","category":"Nostr"},
+  {"title":"GitHub","url":"https://github.com/jqw22","category":"Nostr"},
+  {"title":"Nostr","url":"https://nostr.com","category":"Nostr"},
+  {"title":"Nostrplebs","url":"https://nostrplebs.com","category":"Nostr"},
+  {"title":"Shakespeare","url":"https://shakespeare.diy/","category":"Nostr"},
+  {"title":"Craig Roberts Photography","url":"https://craigrobertsphotography.co.uk","category":"Photography"},
+  {"title":"Fasthosts login","url":"https://admin.fasthosts.co.uk","category":"Photography"},
+  {"title":"Simlab Photos","url":"https://www.simlab.co.uk","category":"Photography"},
+  {"title":"Wordpress","url":"https://wordpress.com/log-in/","category":"Photography"},
+  {"title":"X-T4 Manual","url":"https://fujifilm-dsc.com/en/manual/x-t4","category":"Photography"},
+  {"title":"Amazon","url":"https://www.amazon.co.uk","category":"Shopping"},
+  {"title":"Classic Tools","url":"https://www.classichandtools.com","category":"Shopping"},
+  {"title":"Coal shop","url":"https://supaheatfuels.co.uk","category":"Shopping"},
+  {"title":"Honest Grapes","url":"https://www.honestgrapes.co.uk/account/login?return_url=%2Faccount","category":"Shopping"},
+  {"title":"Nespresso","url":"https://www.nespresso.com/uk/en","category":"Shopping"},
+  {"title":"Putnams","url":"https://putnams.co.uk","category":"Shopping"},
+  {"title":"Tea Shop","url":"https://www.exoticteapot.co.uk","category":"Shopping"},
+  {"title":"Wood Supplier - Lekto","url":"https://www.lektowoodfuels.co.uk/","category":"Shopping"},
+  {"title":"Airbnb","url":"https://www.airbnb.co.uk","category":"Travel"},
+  {"title":"BA.com","url":"https://www.ba.com","category":"Travel"},
+  {"title":"Booking.com","url":"https://www.booking.com","category":"Travel"},
+  {"title":"British Pilgrimages","url":"https://www.britishpilgrimage.org","category":"Travel"},
+  {"title":"Easyjet","url":"https://www.easyjet.com/en","category":"Travel"},
+  {"title":"Enterprise Car Hire","url":"https://www.enterprise.co.uk/en","category":"Travel"},
+  {"title":"Flight Radar","url":"https://www.flightradar24.com","category":"Travel"},
+  {"title":"Google Flights","url":"https://www.google.com/travel","category":"Travel"},
+  {"title":"Holiday Cottages","url":"https://www.cottages.com","category":"Travel"},
+  {"title":"i-escape","url":"https://www.i-escape.com","category":"Travel"},
+  {"title":"Manchester Airport Parking","url":"https://www.manchesterairport.co.uk/booking","category":"Travel"},
+  {"title":"Olhao Appartments","url":"https://www.whiteterraces.com","category":"Travel"},
+  {"title":"Olhao Convento","url":"https://www.conventoolhao.com/book","category":"Travel"},
+  {"title":"Ryanair","url":"https://www.ryanair.com","category":"Travel"},
+  {"title":"Sawdays","url":"https://www.sawdays.co.uk","category":"Travel"},
+  {"title":"Seat Spy","url":"https://www.seatspy.com","category":"Travel"},
+  {"title":"Trainline","url":"https://www.thetrainline.com","category":"Travel"},
+  {"title":"Unique Home Stays cottages","url":"https://www.uniquehomestays.com","category":"Travel"},
+  {"title":"With Locals","url":"https://www.withlocals.com","category":"Travel"},
+  {"title":"Apple icloud","url":"https://www.icloud.com","category":"Webapps"},
+  {"title":"Archive Books","url":"https://archive.org","category":"Webapps"},
+  {"title":"DrawIO","url":"https://www.drawio.com","category":"Webapps"},
+  {"title":"Family Search","url":"https://ident.familysearch.org/identity/login/?state=https://www.familysearch.org/en/united-kingdom/","category":"Webapps"},
+  {"title":"iLovePDF","url":"https://www.ilovepdf.com","category":"Webapps"},
+  {"title":"Incogni","url":"https://incogni.com/auth/login","category":"Webapps"},
+  {"title":"OneDrive","url":"https://onedrive.live.com","category":"Webapps"},
+  {"title":"Proton Drive","url":"https://drive.proton.me","category":"Webapps"},
+  {"title":"Spotify","url":"https://open.spotify.com","category":"Webapps"},
+  {"title":"Standard Notes","url":"https://app.standardnotes.com","category":"Webapps"}
+];
+var CATS = ["Frequent links","Media / Entertainment","Webapps","Nostr","Shopping","Travel","Finance","Banking & Insurance","Gov","Home / Utilities","Photography","Jung","Health"];
+var STOR = "links_overlay";
+var base = BASE_LINKS;
+
+function gOv() { try { var r=localStorage.getItem(STOR); return r?JSON.parse(r):{added:[],removed:[]}; } catch(e) { return {added:[],removed:[]}; } }
+function sOv(o) { localStorage.setItem(STOR,JSON.stringify(o)); }
+function lk(l) { return l.title+"|||"+l.url; }
+function gLinks() {
+  var o=gOv(), rk=new Set(o.removed.map(lk)), e=base.filter(function(l){return!rk.has(lk(l));});
+  for(var i=0;i<o.added.length;i++) e.push(o.added[i]);
+  e.sort(function(a,b){return a.category.localeCompare(b.category)||a.title.localeCompare(b.title);});
+  return e;
+}
+function addLink(t,u,c) { var o=gOv(); o.added.push({title:t.trim(),url:u.trim(),category:c}); sOv(o); render(); }
+function delLink(i) { var ls=gLinks(), l=ls[i]; if(!l)return; var k=lk(l), o=gOv(), ai=-1;
+  for(var j=0;j<o.added.length;j++){if(lk(o.added[j])===k){ai=j;break;}}
+  if(ai>=0) o.added.splice(ai,1); else o.removed.push({title:l.title,url:l.url}); sOv(o); render(); }
+function saveToFile() {
+  var ls=gLinks(), lines=[], push=function(s){lines.push(s);};
+  for(var i=0;i<ls.length;i++){
+    var l=ls[i], t=JSON.stringify(l.title), u=JSON.stringify(l.url), c=JSON.stringify(l.category);
+    if(i<ls.length-1) push('  {"title":'+t+',"url":'+u+',"category":'+c+'},');
+    else push('  {"title":'+t+',"url":'+u+',"category":'+c+'}');
+  }
+  var newData=lines.join('\n'), html=document.documentElement.outerHTML;
+  var re=/var BASE_LINKS = \[[\s\S]*?\n\];/;
+  html=html.replace(re,'var BASE_LINKS = [\n'+newData+'\n];');
+  html=html.replace(' class="stackedit editing"',' class="stackedit"');
+  var b=new Blob([html],{type:"text/html"}), a=document.createElement("a");
+  a.href=URL.createObjectURL(b); a.download="index.html"; a.click(); URL.revokeObjectURL(a.href);
+  base=ls; sOv({added:[],removed:[]}); render();
+}
+function importJSON(f) { var r=new FileReader(); r.onload=function(){
+  try{var d=JSON.parse(r.result);if(!Array.isArray(d)){alert("Invalid format.");return;}
+  if(!confirm("Replace all links with imported file?"))return;base=d;sOv({added:[],removed:[]});render();}
+  catch(e){alert("Could not parse JSON.");}}; r.readAsText(f); }
+function render() {
+  var ls=gLinks();
+  document.getElementById("toc-list").innerHTML = CATS.map(function(c){return'<li><a href="#'+encodeURIComponent(c)+'">'+escH(c)+'</a></li>';}).join("");
+  var h="",c=document.getElementById("links-container");
+  for(var ci=0;ci<CATS.length;ci++){var ct=CATS[ci], cl=[];
+    h+='<h5 id="'+encodeURIComponent(ct)+'">'+escH(ct)+'</h5>\n';
+    for(var i=0;i<ls.length;i++){if(ls[i].category===ct)cl.push({l:ls[i],idx:i});}
+    if(cl.length===0)h+='<p class="empty-category">No links yet.</p>\n';
+    else for(var j=0;j<cl.length;j++){var x=cl[j];
+      h+='<span class="link-row"><a href="'+escA(x.l.url)+'" target="_blank">'+escH(x.l.title)+'</a><button class="del-btn" data-idx="'+x.idx+'" title="Remove">&times;</button></span><br>\n';}
+  }
+  c.innerHTML=h;
+  document.getElementById("link-category").innerHTML = CATS.map(function(x){return'<option value="'+escA(x)+'">'+escH(x)+'</option>';}).join("");
+  var bs=c.querySelectorAll(".del-btn"); for(var b=0;b<bs.length;b++){bs[b].onclick=function(){if(confirm("Remove this link?"))delLink(parseInt(this.dataset.idx));};}
+}
+function escH(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML;}
+function escA(s){return s.replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+document.addEventListener("DOMContentLoaded",function(){
+  render();
+  document.getElementById("toggle-edit").onclick=function(){document.body.classList.toggle("editing");this.textContent=document.body.classList.contains("editing")?"Done Editing":"Edit Links";};
+  document.getElementById("btn-add").onclick=function(){
+    var t=document.getElementById("link-title").value.trim(), u=document.getElementById("link-url").value.trim(), c=document.getElementById("link-category").value;
+    if(!t){alert("Please enter a title.");return;} if(!u){alert("Please enter a URL.");return;} if(!/^https?:\/\/.+/i.test(u)){alert("URL must start with http:// or https://");return;}
+    addLink(t,u,c); document.getElementById("link-title").value=""; document.getElementById("link-url").value="https://";
+  };
+  document.getElementById("link-url").onkeydown=function(e){if(e.key==="Enter")document.getElementById("btn-add").click();};
+  document.getElementById("link-title").onkeydown=function(e){if(e.key==="Enter")document.getElementById("btn-add").click();};
+  document.getElementById("btn-export").onclick=saveToFile;
+  var fi=document.getElementById("import-file");
+  document.getElementById("btn-import").onclick=function(){fi.click();};
+  fi.onchange=function(){if(fi.files[0])importJSON(fi.files[0]);fi.value="";};
+});
+</script>
+
+
+<script src="webkit-masked-url://hidden/"></script><script src="webkit-masked-url://hidden/"></script></body></html>
