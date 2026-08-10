@@ -43,7 +43,7 @@
     }
   </style>
 </head>
-<body class="stackedit editing">
+<body class="stackedit">
 <div class="stackedit__left">
   <div class="stackedit__toc"><ul><li><a href="#Links">Links</a><ul id="toc-list"><li><a href="#Frequent%20links">Frequent links</a></li><li><a href="#Media%20%2F%20Entertainment">Media / Entertainment</a></li><li><a href="#Webapps">Webapps</a></li><li><a href="#Nostr">Nostr</a></li><li><a href="#Shopping">Shopping</a></li><li><a href="#Travel">Travel</a></li><li><a href="#Finance">Finance</a></li><li><a href="#Banking%20%26%20Insurance">Banking &amp; Insurance</a></li><li><a href="#Gov">Gov</a></li><li><a href="#Home%20%2F%20Utilities">Home / Utilities</a></li><li><a href="#Photography">Photography</a></li><li><a href="#Jung">Jung</a></li><li><a href="#Health">Health</a></li></ul></li></ul></div>
 </div>
@@ -313,6 +313,7 @@ function saveToFile() {
   var newData=lines.join('\n'), html=document.documentElement.outerHTML;
   var re=/var BASE_LINKS = \[[\s\S]*?\n\];/;
   html=html.replace(re,'var BASE_LINKS = [\n'+newData+'\n];');
+  html=html.replace(' class="stackedit editing"',' class="stackedit"');
   var b=new Blob([html],{type:"text/html"}), a=document.createElement("a");
   a.href=URL.createObjectURL(b); a.download="index.html"; a.click(); URL.revokeObjectURL(a.href);
 }
