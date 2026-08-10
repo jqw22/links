@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://stackedit.io/style.css">
   <style>
-    /* Add/Remove UI */
     #add-link-form {
       background: #f5f5f5;
       border: 1px solid #ddd;
@@ -13,113 +12,45 @@
       padding: 14px 16px;
       margin-bottom: 20px;
     }
-    #add-link-form h5 {
-      margin: 0 0 10px 0;
-    }
-    #add-link-form label {
-      display: block;
-      font-size: 0.85em;
-      margin-bottom: 2px;
-      color: #555;
-    }
+    #add-link-form h5 { margin: 0 0 10px 0; }
+    #add-link-form label { display: block; font-size: 0.85em; margin-bottom: 2px; color: #555; }
     #add-link-form input,
     #add-link-form select {
-      width: 100%;
-      padding: 6px 8px;
-      margin-bottom: 8px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-size: 0.9em;
-      box-sizing: border-box;
+      width: 100%; padding: 6px 8px; margin-bottom: 8px;
+      border: 1px solid #ccc; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;
     }
     #add-link-form button {
-      padding: 6px 16px;
-      background: #4078c0;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 0.9em;
+      padding: 6px 16px; background: #4078c0; color: #fff;
+      border: none; border-radius: 4px; cursor: pointer; font-size: 0.9em;
     }
-    #add-link-form button:hover {
-      background: #3568aa;
-    }
-
-    /* Delete button on links */
+    #add-link-form button:hover { background: #3568aa; }
     .link-row {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      margin-right: 6px;
+      display: inline-flex; align-items: center; gap: 4px; margin-right: 6px;
     }
     .link-row .del-btn {
-      display: inline-block;
-      width: 18px;
-      height: 18px;
-      line-height: 16px;
-      text-align: center;
-      font-size: 14px;
-      font-weight: bold;
-      color: #c00;
-      background: none;
-      border: 1px solid transparent;
-      border-radius: 50%;
-      cursor: pointer;
-      padding: 0;
-      opacity: 0.35;
-      transition: opacity 0.15s, border-color 0.15s;
-      vertical-align: middle;
-      flex-shrink: 0;
+      display: inline-block; width: 18px; height: 18px; line-height: 16px;
+      text-align: center; font-size: 14px; font-weight: bold; color: #c00;
+      background: none; border: 1px solid transparent; border-radius: 50%;
+      cursor: pointer; padding: 0; opacity: 0.35;
+      transition: opacity 0.15s, border-color 0.15s; vertical-align: middle; flex-shrink: 0;
     }
-    .link-row:hover .del-btn {
-      opacity: 1;
-      border-color: #c00;
-    }
-    .link-row .del-btn:hover {
-      background: #fee;
-    }
-
-    /* Toggle edit mode */
+    .link-row:hover .del-btn { opacity: 1; border-color: #c00; }
+    .link-row .del-btn:hover { background: #fee; }
     #toggle-edit {
-      padding: 4px 12px;
-      background: #f0f0f0;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 0.85em;
-      margin-bottom: 16px;
+      padding: 4px 12px; background: #f0f0f0; border: 1px solid #ccc;
+      border-radius: 4px; cursor: pointer; font-size: 0.85em; margin-bottom: 16px;
     }
-    #toggle-edit:hover {
-      background: #e4e4e4;
-    }
-
-    /* Hide edit UI by default */
+    #toggle-edit:hover { background: #e4e4e4; }
     .edit-ui { display: none; }
     body.editing .edit-ui { display: block; }
     body.editing .link-row .del-btn { display: inline-block; }
     .link-row .del-btn { display: none; }
-
-    /* Empty category message */
-    .empty-category {
-      color: #999;
-      font-style: italic;
-      font-size: 0.9em;
-    }
-
-    /* Export/Import buttons */
-    #io-buttons {
-      margin-bottom: 12px;
-      display: none;
-    }
+    .empty-category { color: #999; font-style: italic; font-size: 0.9em; }
+    #io-buttons { margin-bottom: 12px; display: none; }
     body.editing #io-buttons { display: block; }
     #io-buttons button {
-      padding: 4px 10px;
-      background: #f0f0f0;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 0.8em;
-      margin-right: 6px;
+      padding: 4px 10px; background: #f0f0f0; border: 1px solid #ccc;
+      border-radius: 4px; cursor: pointer; font-size: 0.8em; margin-right: 6px;
     }
     #io-buttons button:hover { background: #e4e4e4; }
   </style>
@@ -138,12 +69,11 @@
 <div class="stackedit__right">
   <div class="stackedit__html">
     <h4 id="Links">Links</h4>
-
     <button id="toggle-edit">Edit Links</button>
 
     <div id="io-buttons" class="edit-ui">
-      <button id="btn-export" title="Download all links as links.json">Export JSON</button>
-      <button id="btn-import" title="Replace links with a links.json file">Import JSON</button>
+      <button id="btn-export">Export JSON</button>
+      <button id="btn-import">Import JSON</button>
       <input type="file" id="import-file" accept=".json" style="display:none">
     </div>
 
@@ -168,83 +98,67 @@
 <footer></footer>
 
 <script>
-// ===== Category order =====
 const CATEGORY_ORDER = [
   "Frequent links", "Media / Entertainment", "Webapps", "Nostr", "Shopping",
   "Travel", "Finance", "Banking & Insurance", "Gov", "Home / Utilities",
   "Photography", "Jung", "Health"
 ];
+const STORAGE_KEY = "links_overlay";
+let baseLinks = null;
 
-const STORAGE_KEY = "links_overlay"; // { added: [...], removed: [{title,url}] }
-let baseLinks = null; // loaded from links.json
-
-// ===== Load base links from links.json =====
-async function fetchBaseLinks() {
-  const resp = await fetch("links.json?v=" + Date.now(), { cache: "no-store" });
-  if (!resp.ok) throw new Error("Failed to load links.json");
-  const data = await resp.json();
-  if (!Array.isArray(data) || data.length === 0) throw new Error("Empty links.json");
-  return data;
+// ===== Fetch links.json =====
+async function loadBaseLinks() {
+  var url = "links.json?v=" + Date.now();
+  var r = await fetch(url, { cache: "no-store" });
+  if (!r.ok) throw new Error("Failed to load links.json");
+  var d = await r.json();
+  if (!Array.isArray(d) || d.length === 0) throw new Error("Empty links.json");
+  baseLinks = d;
 }
 
 // ===== Overlay logic =====
 function getOverlay() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : { added: [], removed: [] };
-  } catch (e) {
-    return { added: [], removed: [] };
-  }
+  try { var raw = localStorage.getItem(STORAGE_KEY); return raw ? JSON.parse(raw) : { added: [], removed: [] }; }
+  catch (e) { return { added: [], removed: [] }; }
 }
-
-function saveOverlay(overlay) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(overlay));
-}
-
+function saveOverlay(ov) { localStorage.setItem(STORAGE_KEY, JSON.stringify(ov)); }
 function linkKey(l) { return l.title + "|||" + l.url; }
 
 function getEffectiveLinks() {
   if (!baseLinks) return [];
-  const ov = getOverlay();
-  const removedKeys = new Set(ov.removed.map(linkKey));
-  // Start with base minus removed
-  const effective = baseLinks.filter(l => !removedKeys.has(linkKey(l)));
-  // Add user-added links
-  for (const l of ov.added) effective.push(l);
+  var ov = getOverlay();
+  var removedKeys = new Set(ov.removed.map(linkKey));
+  var effective = baseLinks.filter(function(l) { return !removedKeys.has(linkKey(l)); });
+  for (var i = 0; i < ov.added.length; i++) effective.push(ov.added[i]);
   return effective;
 }
 
 function addLink(title, url, category) {
-  const ov = getOverlay();
-  ov.added.push({ title: title.trim(), url: url.trim(), category });
+  var ov = getOverlay();
+  ov.added.push({ title: title.trim(), url: url.trim(), category: category });
   saveOverlay(ov);
   render();
 }
 
 function deleteLink(index) {
-  const links = getEffectiveLinks();
-  const link = links[index];
+  var links = getEffectiveLinks();
+  var link = links[index];
   if (!link) return;
-  const key = linkKey(link);
-  const ov = getOverlay();
-
-  // Check if it's a user-added link
-  const addedIdx = ov.added.findIndex(l => linkKey(l) === key);
-  if (addedIdx >= 0) {
-    ov.added.splice(addedIdx, 1);
-  } else {
-    // It's a base link — mark as removed
-    ov.removed.push({ title: link.title, url: link.url });
-  }
+  var key = linkKey(link);
+  var ov = getOverlay();
+  var addedIdx = -1;
+  for (var i = 0; i < ov.added.length; i++) { if (linkKey(ov.added[i]) === key) { addedIdx = i; break; } }
+  if (addedIdx >= 0) { ov.added.splice(addedIdx, 1); }
+  else { ov.removed.push({ title: link.title, url: link.url }); }
   saveOverlay(ov);
   render();
 }
 
 // ===== Export / Import =====
 function exportJSON() {
-  const links = getEffectiveLinks();
-  const blob = new Blob([JSON.stringify(links, null, 2)], { type: "application/json" });
-  const a = document.createElement("a");
+  var links = getEffectiveLinks();
+  var blob = new Blob([JSON.stringify(links, null, 2)], { type: "application/json" });
+  var a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
   a.download = "links.json";
   a.click();
@@ -252,141 +166,90 @@ function exportJSON() {
 }
 
 function importJSON(file) {
-  const reader = new FileReader();
-  reader.onload = () => {
+  var reader = new FileReader();
+  reader.onload = function() {
     try {
-      const imported = JSON.parse(reader.result);
+      var imported = JSON.parse(reader.result);
       if (!Array.isArray(imported)) { alert("Invalid format: expected an array."); return; }
       if (!confirm("This will replace your current links with the imported file. Continue?")) return;
-      // Merge: set baseLinks to imported, clear overlay
       baseLinks = imported;
       saveOverlay({ added: [], removed: [] });
       render();
-    } catch (e) {
-      alert("Could not parse the file as JSON.");
-    }
+    } catch (e) { alert("Could not parse the file as JSON."); }
   };
   reader.readAsText(file);
 }
 
 // ===== Render =====
 function render() {
-  const links = getEffectiveLinks();
+  var links = getEffectiveLinks();
+  var tocList = document.getElementById("toc-list");
+  tocList.innerHTML = CATEGORY_ORDER.map(function(c) { return '<li><a href="#' + encodeURIComponent(c) + '">' + escHtml(c) + '</a></li>'; }).join("");
 
-  // Build TOC
-  const tocList = document.getElementById("toc-list");
-  tocList.innerHTML = CATEGORY_ORDER
-    .map(cat => `<li><a href="#${encodeURIComponent(cat)}">${escHtml(cat)}</a></li>`)
-    .join("");
-
-  // Build links HTML
-  const container = document.getElementById("links-container");
-  let html = "";
-
+  var container = document.getElementById("links-container");
+  var html = "";
   if (!baseLinks) {
-    html = `<p style="color:#c66;">Unable to load links. Check that links.json is present.</p>`;
+    html = '<p style="color:#c66;">Loading links&hellip;</p>';
   } else {
-  for (const cat of CATEGORY_ORDER) {
-    html += `<h5 id="${encodeURIComponent(cat)}">${escHtml(cat)}</h5>\n`;
-    const catLinks = links
-      .map((link, idx) => ({ link, idx }))
-      .filter(({ link }) => link.category === cat);
-
-    if (catLinks.length === 0) {
-      html += `<p class="empty-category">No links yet.</p>\n`;
-    } else {
-      for (const { link, idx } of catLinks) {
-        html += `<span class="link-row">`;
-        html += `<a href="${escAttr(link.url)}" target="_blank">${escHtml(link.title)}</a>`;
-        html += `<button class="del-btn" data-idx="${idx}" title="Remove">&times;</button>`;
-        html += `</span><br>\n`;
+    for (var ci = 0; ci < CATEGORY_ORDER.length; ci++) {
+      var cat = CATEGORY_ORDER[ci];
+      html += '<h5 id="' + encodeURIComponent(cat) + '">' + escHtml(cat) + '</h5>\n';
+      var catLinks = [];
+      for (var i = 0; i < links.length; i++) { if (links[i].category === cat) catLinks.push({ link: links[i], idx: i }); }
+      if (catLinks.length === 0) { html += '<p class="empty-category">No links yet.</p>\n'; }
+      else {
+        for (var j = 0; j < catLinks.length; j++) {
+          var l = catLinks[j];
+          html += '<span class="link-row"><a href="' + escAttr(l.link.url) + '" target="_blank">' + escHtml(l.link.title) + '</a><button class="del-btn" data-idx="' + l.idx + '" title="Remove">&times;</button></span><br>\n';
+        }
       }
     }
   }
-  } // end if (baseLinks)
   container.innerHTML = html;
 
-  // Populate category dropdown
-  const select = document.getElementById("link-category");
-  select.innerHTML = CATEGORY_ORDER
-    .map(cat => `<option value="${escAttr(cat)}">${escHtml(cat)}</option>`)
-    .join("");
+  var select = document.getElementById("link-category");
+  select.innerHTML = CATEGORY_ORDER.map(function(c) { return '<option value="' + escAttr(c) + '">' + escHtml(c) + '</option>'; }).join("");
 
-  // Attach delete handlers
-  container.querySelectorAll(".del-btn").forEach(btn => {
-    btn.addEventListener("click", function () {
-      if (confirm("Remove this link?")) {
-        deleteLink(parseInt(this.dataset.idx));
-      }
-    });
-  });
+  var btns = container.querySelectorAll(".del-btn");
+  for (var b = 0; b < btns.length; b++) {
+    btns[b].addEventListener("click", function() { if (confirm("Remove this link?")) deleteLink(parseInt(this.dataset.idx)); });
+  }
 }
 
 // ===== Helpers =====
-function escHtml(s) {
-  const d = document.createElement("div");
-  d.textContent = s;
-  return d.innerHTML;
-}
-function escAttr(s) {
-  return s.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-}
+function escHtml(s) { var d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
+function escAttr(s) { return s.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
 
 // ===== Init =====
-document.addEventListener("DOMContentLoaded", async () => {
-  try {
-    baseLinks = await fetchBaseLinks();
-  } catch (e) {
-    baseLinks = null;
-    console.error("Failed to load links.json:", e);
-  }
-  render();
-
-  // Toggle edit mode
-  const toggleBtn = document.getElementById("toggle-edit");
-  toggleBtn.addEventListener("click", () => {
-    document.body.classList.toggle("editing");
-    toggleBtn.textContent = document.body.classList.contains("editing")
-      ? "Done Editing"
-      : "Edit Links";
+document.addEventListener("DOMContentLoaded", function() {
+  loadBaseLinks().then(render).catch(function(e) {
+    console.error(e);
+    render();
   });
 
-  // Add link form
-  document.getElementById("btn-add").addEventListener("click", () => {
-    const title = document.getElementById("link-title").value.trim();
-    const url   = document.getElementById("link-url").value.trim();
-    const cat   = document.getElementById("link-category").value;
+  document.getElementById("toggle-edit").addEventListener("click", function() {
+    document.body.classList.toggle("editing");
+    this.textContent = document.body.classList.contains("editing") ? "Done Editing" : "Edit Links";
+  });
 
+  document.getElementById("btn-add").addEventListener("click", function() {
+    var title = document.getElementById("link-title").value.trim();
+    var url = document.getElementById("link-url").value.trim();
+    var cat = document.getElementById("link-category").value;
     if (!title) { alert("Please enter a title."); return; }
-    if (!url)   { alert("Please enter a URL."); return; }
-    if (!/^https?:\/\/.+/i.test(url)) {
-      alert("URL must start with http:// or https://");
-      return;
-    }
-
+    if (!url) { alert("Please enter a URL."); return; }
+    if (!/^https?:\/\/.+/i.test(url)) { alert("URL must start with http:// or https://"); return; }
     addLink(title, url, cat);
     document.getElementById("link-title").value = "";
     document.getElementById("link-url").value = "https://";
   });
 
-  // Submit on Enter
-  document.getElementById("link-url").addEventListener("keydown", (e) => {
-    if (e.key === "Enter") document.getElementById("btn-add").click();
-  });
-  document.getElementById("link-title").addEventListener("keydown", (e) => {
-    if (e.key === "Enter") document.getElementById("btn-add").click();
-  });
-
-  // Export
+  document.getElementById("link-url").addEventListener("keydown", function(e) { if (e.key === "Enter") document.getElementById("btn-add").click(); });
+  document.getElementById("link-title").addEventListener("keydown", function(e) { if (e.key === "Enter") document.getElementById("btn-add").click(); });
   document.getElementById("btn-export").addEventListener("click", exportJSON);
-
-  // Import
-  const fileInput = document.getElementById("import-file");
-  document.getElementById("btn-import").addEventListener("click", () => fileInput.click());
-  fileInput.addEventListener("change", () => {
-    if (fileInput.files[0]) importJSON(fileInput.files[0]);
-    fileInput.value = "";
-  });
+  var fi = document.getElementById("import-file");
+  document.getElementById("btn-import").addEventListener("click", function() { fi.click(); });
+  fi.addEventListener("change", function() { if (fi.files[0]) importJSON(fi.files[0]); fi.value = ""; });
 });
 </script>
 
