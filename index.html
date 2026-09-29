@@ -1,62 +1,108 @@
-<html lang="en"><head><script src="/__injected__/preview.js"></script>
-  <title>Links</title>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://stackedit.io/style.css">
-  <style>
-    #add-link-form {
-      background: #f5f5f5; border: 1px solid #ddd; border-radius: 6px;
-      padding: 14px 16px; margin-bottom: 20px;
-    }
-    #add-link-form h5 { margin: 0 0 10px 0; }
-    #add-link-form label { display: block; font-size: 0.85em; margin-bottom: 2px; color: #555; }
-    #add-link-form input, #add-link-form select {
-      width: 100%; padding: 6px 8px; margin-bottom: 8px;
-      border: 1px solid #ccc; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;
-    }
-    #add-link-form button {
-      padding: 6px 16px; background: #4078c0; color: #fff;
-      border: none; border-radius: 4px; cursor: pointer; font-size: 0.9em;
-    }
-    .link-row { display: inline-flex; align-items: center; gap: 4px; margin-right: 6px; }
-    .link-row .del-btn {
-      width: 18px; height: 18px; line-height: 16px; text-align: center; font-size: 14px;
-      font-weight: bold; color: #c00; background: none; border: 1px solid transparent;
-      border-radius: 50%; cursor: pointer; padding: 0; opacity: 0.35; flex-shrink: 0;
-    }
-    .link-row:hover .del-btn { opacity: 1; border-color: #c00; }
-    .link-row .del-btn:hover { background: #fee; }
-    #toggle-edit {
-      padding: 4px 12px; background: #f0f0f0; border: 1px solid #ccc;
-      border-radius: 4px; cursor: pointer; font-size: 0.85em; margin-bottom: 16px;
-    }
-    .edit-ui { display: none; }
-    body.editing .edit-ui { display: block; }
-    body.editing .link-row .del-btn { display: inline-block; }
-    .link-row .del-btn { display: none; }
-    .empty-category { color: #999; font-style: italic; font-size: 0.9em; }
-    #io-buttons { margin-bottom: 12px; display: none; }
-    body.editing #io-buttons { display: block; }
-    #io-buttons button {
-      padding: 4px 10px; background: #f0f0f0; border: 1px solid #ccc;
-      border-radius: 4px; cursor: pointer; font-size: 0.8em; margin-right: 6px;
-    }
-  </style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Links</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%94%97%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://stackedit.io/style.css">
+<style>
+  #add-link-form {
+    background: #f5f5f5; border: 1px solid #ddd; border-radius: 6px;
+    padding: 14px 16px; margin-bottom: 20px;
+  }
+  #add-link-form h5 { margin: 0 0 10px 0; }
+  #add-link-form label { display: block; font-size: 0.85em; margin-bottom: 2px; color: #555; }
+  #add-link-form input, #add-link-form select {
+    width: 100%; padding: 6px 8px; margin-bottom: 8px;
+    border: 1px solid #ccc; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;
+  }
+  #add-link-form button {
+    padding: 6px 16px; background: #4078c0; color: #fff;
+    border: none; border-radius: 4px; cursor: pointer; font-size: 0.9em;
+  }
+  .link-row { display: inline-flex; align-items: center; gap: 4px; margin-right: 6px; }
+  .link-row .del-btn {
+    width: 18px; height: 18px; line-height: 16px; text-align: center; font-size: 14px;
+    font-weight: bold; color: #c00; background: none; border: 1px solid transparent;
+    border-radius: 50%; cursor: pointer; padding: 0; opacity: 0.35; flex-shrink: 0;
+  }
+  .link-row:hover .del-btn { opacity: 1; border-color: #c00; }
+  .link-row .del-btn:hover { background: #fee; }
+  #controls { margin-bottom: 14px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  #controls button {
+    padding: 4px 12px; background: #f0f0f0; border: 1px solid #ccc;
+    border-radius: 4px; cursor: pointer; font-size: 0.85em;
+  }
+  #count { font-size: 0.8em; color: #888; }
+  .edit-ui { display: none; }
+  body.editing .edit-ui { display: block; }
+  .empty-category { color: #999; font-style: italic; font-size: 0.9em; }
+
+  /* status banner */
+  #status { display: none; font-size: 0.85em; border-radius: 5px; padding: 8px 12px; margin-bottom: 14px; }
+  #status.show { display: block; }
+  #status.ok { background: #e6f4ea; color: #137333; border: 1px solid #b7e1c1; }
+  #status.err { background: #fce8e6; color: #a50e0e; border: 1px solid #f3b7b3; }
+  #status.info { background: #e8f0fe; color: #1a56c4; border: 1px solid #c6dafc; }
+  .status-btn {
+    margin-left: 10px; padding: 3px 10px; font-size: 0.9em; border: 1px solid currentColor;
+    background: rgba(255,255,255,0.6); border-radius: 4px; cursor: pointer; color: inherit;
+  }
+
+  /* setup panel */
+  #setup { background: #fbfbfb; border: 1px solid #e2e2e2; border-radius: 6px; padding: 10px 14px; margin-bottom: 16px; }
+  #setup summary { cursor: pointer; font-size: 0.9em; color: #444; font-weight: 600; }
+  #setup .note { font-size: 0.8em; color: #666; line-height: 1.5; margin: 10px 0; }
+  #setup .grid { display: grid; grid-template-columns: 90px 1fr; gap: 6px 10px; align-items: center; }
+  #setup label { font-size: 0.82em; color: #555; }
+  #setup input { width: 100%; padding: 5px 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.85em; box-sizing: border-box; }
+  #setup .hint { grid-column: 2; font-size: 0.75em; color: #888; line-height: 1.5; margin: 2px 0 4px; }
+  #setup .actions { margin-top: 10px; }
+  #setup button { padding: 5px 12px; font-size: 0.82em; border: 1px solid #ccc; background: #f0f0f0; border-radius: 4px; cursor: pointer; margin-right: 6px; }
+  #setup code { background: #eee; padding: 1px 4px; border-radius: 3px; }
+</style>
 </head>
 <body class="stackedit">
 <div class="stackedit__left">
-  <div class="stackedit__toc"><ul><li><a href="#Links">Links</a><ul id="toc-list"><li><a href="#Frequent%20links">Frequent links</a></li><li><a href="#Media%20%2F%20Entertainment">Media / Entertainment</a></li><li><a href="#Webapps">Webapps</a></li><li><a href="#Nostr">Nostr</a></li><li><a href="#Shopping">Shopping</a></li><li><a href="#Travel">Travel</a></li><li><a href="#Finance">Finance</a></li><li><a href="#Banking%20%26%20Insurance">Banking &amp; Insurance</a></li><li><a href="#Gov">Gov</a></li><li><a href="#Home%20%2F%20Utilities">Home / Utilities</a></li><li><a href="#Photography">Photography</a></li><li><a href="#Jung">Jung</a></li><li><a href="#Health">Health</a></li></ul></li></ul></div>
+  <div class="stackedit__toc"><ul><li><a href="#Links">Links</a><ul id="toc-list"></ul></li></ul></div>
 </div>
 <div class="stackedit__right">
   <div class="stackedit__html">
     <h4 id="Links">Links</h4>
-    <button id="toggle-edit">Done Editing</button>
 
-    <div id="io-buttons" class="edit-ui">
-      <button id="btn-export">Save to File</button>
-      <button id="btn-import">Import JSON</button>
-      <input type="file" id="import-file" accept=".json" style="display:none">
+    <div id="status"></div>
+
+    <div id="controls">
+      <button id="toggle-edit" type="button">Edit Links</button>
+      <button id="btn-refresh" type="button">&#8635; Reload from GitHub</button>
+      <span id="count"></span>
     </div>
+
+    <details id="setup">
+      <summary>&#9881; GitHub sync setup</summary>
+      <p class="note">
+        Your links live in <code>links.json</code> in the GitHub repo below. This page reads that file on every
+        load and writes your changes back to it — so a link added on your phone shows up on your laptop, and vice versa.
+        To <em>save</em> changes you need a GitHub token, which is stored only in this browser (never uploaded anywhere but GitHub).
+      </p>
+      <div class="grid">
+        <label for="cfg-owner">Owner</label><input id="cfg-owner" placeholder="jqw22" autocomplete="off">
+        <label for="cfg-repo">Repo</label><input id="cfg-repo" placeholder="links" autocomplete="off">
+        <label for="cfg-branch">Branch</label><input id="cfg-branch" placeholder="main" autocomplete="off">
+        <label for="cfg-path">File path</label><input id="cfg-path" placeholder="links.json" autocomplete="off">
+        <label for="cfg-token">Token</label><input id="cfg-token" type="password" placeholder="github_pat_…" autocomplete="off">
+        <span class="hint">
+          Create one at
+          <a href="https://github.com/settings/tokens/new?scopes=public_repo&amp;description=Links%20page" target="_blank" rel="noopener">github.com/settings/tokens</a>
+          — a classic token with the <code>public_repo</code> scope is enough for a public repo.
+        </span>
+      </div>
+      <div class="actions">
+        <button id="cfg-save" type="button">Save settings</button>
+        <button id="cfg-test" type="button">Test connection</button>
+      </div>
+    </details>
 
     <div id="add-link-form" class="edit-ui">
       <h5>Add a Link</h5>
@@ -65,301 +111,404 @@
       <label for="link-url">URL</label>
       <input type="url" id="link-url" placeholder="https://example.com" value="https://">
       <label for="link-category">Category</label>
-      <select id="link-category"><option value="Frequent links">Frequent links</option><option value="Media / Entertainment">Media / Entertainment</option><option value="Webapps">Webapps</option><option value="Nostr">Nostr</option><option value="Shopping">Shopping</option><option value="Travel">Travel</option><option value="Finance">Finance</option><option value="Banking &amp; Insurance">Banking &amp; Insurance</option><option value="Gov">Gov</option><option value="Home / Utilities">Home / Utilities</option><option value="Photography">Photography</option><option value="Jung">Jung</option><option value="Health">Health</option></select>
-      <button id="btn-add">Add Link</button>
+      <select id="link-category"></select>
+      <button id="btn-add" type="button">Add Link</button>
     </div>
 
-    <div id="links-container"><h5 id="Frequent%20links">Frequent links</h5>
-<span class="link-row"><a href="https://jqw22.github.io/cwtext/" target="_blank">App - CW notes</a><button class="del-btn" data-idx="21" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://jqw22.github.io/dance/" target="_blank">App - Dance videos</a><button class="del-btn" data-idx="22" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://jqw22.github.io/notebook/" target="_blank">App - Simple Notes</a><button class="del-btn" data-idx="23" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.google.com/maps" target="_blank">Google Maps</a><button class="del-btn" data-idx="24" title="Remove">×</button></span><br>
-<span class="link-row"><a href="http://www.jamesdewhurst.uk" target="_blank">jamesdewhurst.uk</a><button class="del-btn" data-idx="25" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://lolesports.com/en-GB/leagues/first_stand,lck,lec,msi,worlds" target="_blank">League of Legends</a><button class="del-btn" data-idx="26" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://login.microsoftonline.com" target="_blank">REM email</a><button class="del-btn" data-idx="27" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://samaritans.okta-emea.com/" target="_blank">Samaritans</a><button class="del-btn" data-idx="28" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.3r.org.uk/auth" target="_blank">Three Rings</a><button class="del-btn" data-idx="29" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.youtube.com" target="_blank">YouTube</a><button class="del-btn" data-idx="30" title="Remove">×</button></span><br>
-<h5 id="Media%20%2F%20Entertainment">Media / Entertainment</h5>
-<p class="empty-category">No links yet.</p>
-<h5 id="Webapps">Webapps</h5>
-<span class="link-row"><a href="https://www.icloud.com" target="_blank">Apple icloud</a><button class="del-btn" data-idx="89" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://archive.org" target="_blank">Archive Books</a><button class="del-btn" data-idx="90" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.drawio.com" target="_blank">DrawIO</a><button class="del-btn" data-idx="91" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://ident.familysearch.org/identity/login/?state=https://www.familysearch.org/en/united-kingdom/" target="_blank">Family Search</a><button class="del-btn" data-idx="92" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.ilovepdf.com" target="_blank">iLovePDF</a><button class="del-btn" data-idx="93" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://incogni.com/auth/login" target="_blank">Incogni</a><button class="del-btn" data-idx="94" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://onedrive.live.com" target="_blank">OneDrive</a><button class="del-btn" data-idx="95" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://drive.proton.me" target="_blank">Proton Drive</a><button class="del-btn" data-idx="96" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://open.spotify.com" target="_blank">Spotify</a><button class="del-btn" data-idx="97" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://app.standardnotes.com" target="_blank">Standard Notes</a><button class="del-btn" data-idx="98" title="Remove">×</button></span><br>
-<h5 id="Nostr">Nostr</h5>
-<span class="link-row"><a href="https://bookstr.xyz" target="_blank">Bookstr</a><button class="del-btn" data-idx="51" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://app.builderlab.xyz/buzz" target="_blank">Buzz Communities</a><button class="del-btn" data-idx="52" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://github.com/jqw22" target="_blank">GitHub</a><button class="del-btn" data-idx="53" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://nostr.com" target="_blank">Nostr</a><button class="del-btn" data-idx="54" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://nostrplebs.com" target="_blank">Nostrplebs</a><button class="del-btn" data-idx="55" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://shakespeare.diy/" target="_blank">Shakespeare</a><button class="del-btn" data-idx="56" title="Remove">×</button></span><br>
-<h5 id="Shopping">Shopping</h5>
-<span class="link-row"><a href="https://www.amazon.co.uk" target="_blank">Amazon</a><button class="del-btn" data-idx="62" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.classichandtools.com" target="_blank">Classic Tools</a><button class="del-btn" data-idx="63" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://supaheatfuels.co.uk" target="_blank">Coal shop</a><button class="del-btn" data-idx="64" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.honestgrapes.co.uk/account/login?return_url=%2Faccount" target="_blank">Honest Grapes</a><button class="del-btn" data-idx="65" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.nespresso.com/uk/en" target="_blank">Nespresso</a><button class="del-btn" data-idx="66" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://putnams.co.uk" target="_blank">Putnams</a><button class="del-btn" data-idx="67" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.exoticteapot.co.uk" target="_blank">Tea Shop</a><button class="del-btn" data-idx="68" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.lektowoodfuels.co.uk/" target="_blank">Wood Supplier - Lekto</a><button class="del-btn" data-idx="69" title="Remove">×</button></span><br>
-<h5 id="Travel">Travel</h5>
-<span class="link-row"><a href="https://www.airbnb.co.uk" target="_blank">Airbnb</a><button class="del-btn" data-idx="70" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.ba.com" target="_blank">BA.com</a><button class="del-btn" data-idx="71" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.booking.com" target="_blank">Booking.com</a><button class="del-btn" data-idx="72" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.britishpilgrimage.org" target="_blank">British Pilgrimages</a><button class="del-btn" data-idx="73" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.easyjet.com/en" target="_blank">Easyjet</a><button class="del-btn" data-idx="74" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.enterprise.co.uk/en" target="_blank">Enterprise Car Hire</a><button class="del-btn" data-idx="75" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.flightradar24.com" target="_blank">Flight Radar</a><button class="del-btn" data-idx="76" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.google.com/travel" target="_blank">Google Flights</a><button class="del-btn" data-idx="77" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.cottages.com" target="_blank">Holiday Cottages</a><button class="del-btn" data-idx="78" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.i-escape.com" target="_blank">i-escape</a><button class="del-btn" data-idx="79" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.manchesterairport.co.uk/booking" target="_blank">Manchester Airport Parking</a><button class="del-btn" data-idx="80" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.whiteterraces.com" target="_blank">Olhao Appartments</a><button class="del-btn" data-idx="81" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.conventoolhao.com/book" target="_blank">Olhao Convento</a><button class="del-btn" data-idx="82" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.ryanair.com" target="_blank">Ryanair</a><button class="del-btn" data-idx="83" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.sawdays.co.uk" target="_blank">Sawdays</a><button class="del-btn" data-idx="84" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.seatspy.com" target="_blank">Seat Spy</a><button class="del-btn" data-idx="85" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.thetrainline.com" target="_blank">Trainline</a><button class="del-btn" data-idx="86" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.uniquehomestays.com" target="_blank">Unique Home Stays cottages</a><button class="del-btn" data-idx="87" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.withlocals.com" target="_blank">With Locals</a><button class="del-btn" data-idx="88" title="Remove">×</button></span><br>
-<h5 id="Finance">Finance</h5>
-<span class="link-row"><a href="https://andersbrownworth.com/blockchain" target="_blank">Blockchain Site</a><button class="del-btn" data-idx="7" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.bonnerprivateresearch.com" target="_blank">Bonner PR</a><button class="del-btn" data-idx="8" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.bytetree.com/the-multi-asset-investor" target="_blank">Bytetree</a><button class="del-btn" data-idx="9" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.chards.co.uk" target="_blank">Chards</a><button class="del-btn" data-idx="10" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.coinbase.com/en-gb/explore" target="_blank">Coinbase</a><button class="del-btn" data-idx="11" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.epsilontheory.com" target="_blank">Epsilon Theory</a><button class="del-btn" data-idx="12" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.farmersfable.org" target="_blank">Famers Fable</a><button class="del-btn" data-idx="13" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://share-dealing.halifaxsharedealing-online.co.uk" target="_blank">Halifax</a><button class="del-btn" data-idx="14" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.hl.co.uk/shares" target="_blank">HL</a><button class="del-btn" data-idx="15" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.interactivebrokers.co.uk/portal/#/dashboard/positions" target="_blank">Interactive Brokers</a><button class="del-btn" data-idx="16" title="Remove">×</button></span><br>
-<span class="link-row"><a href="http://www.myrmikan.com/port" target="_blank">Myrmikan</a><button class="del-btn" data-idx="17" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://nav.al" target="_blank">Naval</a><button class="del-btn" data-idx="18" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.southbankresearch.com" target="_blank">Southbank</a><button class="del-btn" data-idx="19" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://fooledbyrandomness.com" target="_blank">Taleb</a><button class="del-btn" data-idx="20" title="Remove">×</button></span><br>
-<h5 id="Banking%20%26%20Insurance">Banking &amp; Insurance</h5>
-<span class="link-row"><a href="https://www.admiral.com" target="_blank">Admiral Insurance</a><button class="del-btn" data-idx="0" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.aviva.co.uk" target="_blank">Aviva Insurance</a><button class="del-btn" data-idx="1" title="Remove">×</button></span><br>
-<span class="link-row"><a href="http://www1.firstdirect.com" target="_blank">Bank</a><button class="del-btn" data-idx="2" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.churchill.com" target="_blank">Churchill Insurance</a><button class="del-btn" data-idx="3" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.carhireexcess.com" target="_blank">Hire Car Excess Insurance</a><button class="del-btn" data-idx="4" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.ripeinsurance.co.uk/login" target="_blank">ripe - Dinghy Insurance</a><button class="del-btn" data-idx="5" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.teacherspensions.co.uk/members/member-login.aspx" target="_blank">Teachers Pension</a><button class="del-btn" data-idx="6" title="Remove">×</button></span><br>
-<h5 id="Gov">Gov</h5>
-<span class="link-row"><a href="https://www.access.service.gov.uk/login/signin/creds" target="_blank">Gov.uk</a><button class="del-btn" data-idx="31" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://propertyalert.landregistry.gov.uk/propertyalert/myalerts/entry?SignIn=Sign+in" target="_blank">HM Land Registry</a><button class="del-btn" data-idx="32" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://logon.slc.co.uk/welcome/secured/login?_locale=en_GB&amp;cookieConsent=accept" target="_blank">Student Finance</a><button class="del-btn" data-idx="33" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.teacherspensions.co.uk/members/member-login.aspx" target="_blank">Teacher Pensions</a><button class="del-btn" data-idx="34" title="Remove">×</button></span><br>
-<h5 id="Home%20%2F%20Utilities">Home / Utilities</h5>
-<span class="link-row"><a href="https://www.BT.com" target="_blank">BT Broadband</a><button class="del-btn" data-idx="41" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.lebara.co.uk/en/home.html" target="_blank">Lebara Mobiles</a><button class="del-btn" data-idx="42" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://octopus.energy" target="_blank">Octopus Energy</a><button class="del-btn" data-idx="43" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.tvlicensing.co.uk/yourlicense" target="_blank">TV License</a><button class="del-btn" data-idx="44" title="Remove">×</button></span><br>
-<h5 id="Photography">Photography</h5>
-<span class="link-row"><a href="https://craigrobertsphotography.co.uk" target="_blank">Craig Roberts Photography</a><button class="del-btn" data-idx="57" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://admin.fasthosts.co.uk" target="_blank">Fasthosts login</a><button class="del-btn" data-idx="58" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.simlab.co.uk" target="_blank">Simlab Photos</a><button class="del-btn" data-idx="59" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://wordpress.com/log-in/" target="_blank">Wordpress</a><button class="del-btn" data-idx="60" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://fujifilm-dsc.com/en/manual/x-t4" target="_blank">X-T4 Manual</a><button class="del-btn" data-idx="61" title="Remove">×</button></span><br>
-<h5 id="Jung">Jung</h5>
-<span class="link-row"><a href="https://www.carlchapman.co.uk" target="_blank">Carl Chapman</a><button class="del-btn" data-idx="45" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.cecilebuckenmeyer.co.uk" target="_blank">Cecile Buckenmeyer</a><button class="del-btn" data-idx="46" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.igap.co.uk" target="_blank">igap</a><button class="del-btn" data-idx="47" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.junginstitut.ch/en" target="_blank">Jung Institute</a><button class="del-btn" data-idx="48" title="Remove">×</button></span><br>
-<span class="link-row"><a href="http://www.marksaban.co.uk/index.html" target="_blank">Mark Saban</a><button class="del-btn" data-idx="49" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://speakingofjung.com" target="_blank">Speaking of Jung</a><button class="del-btn" data-idx="50" title="Remove">×</button></span><br>
-<h5 id="Health">Health</h5>
-<span class="link-row"><a href="https://www.omnicalculator.com/health/cholesterol-units" target="_blank">Cholesterol Converter</a><button class="del-btn" data-idx="35" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.thependlemedicalpartnership.nhs.uk" target="_blank">Doctor</a><button class="del-btn" data-idx="36" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://foodforthebrain.org" target="_blank">Food for the brain</a><button class="del-btn" data-idx="37" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://www.theperformance-lab.co.uk" target="_blank">Physio</a><button class="del-btn" data-idx="38" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://bkpca.mypsatests.org.uk/Login" target="_blank">PSA Test</a><button class="del-btn" data-idx="39" title="Remove">×</button></span><br>
-<span class="link-row"><a href="https://royaloakhealth.co.uk" target="_blank">Suppliments - Royal Oak</a><button class="del-btn" data-idx="40" title="Remove">×</button></span><br>
-</div>
+    <div id="links-container"></div>
+
     <br>
-    <small style="color:#888;">Vibed with <a href="https://shakespeare.diy" target="_blank">Shakespeare</a></small>
+    <small style="color:#888;">Vibed with <a href="https://shakespeare.diy" target="_blank" rel="noopener">Shakespeare</a></small>
   </div>
 </div>
-<footer></footer>
+
 <script>
-// This list is auto-synced from links.json
-var BASE_LINKS = [
-  {"title":"Admiral Insurance","url":"https://www.admiral.com","category":"Banking & Insurance"},
-  {"title":"Aviva Insurance","url":"https://www.aviva.co.uk","category":"Banking & Insurance"},
-  {"title":"Bank","url":"http://www1.firstdirect.com","category":"Banking & Insurance"},
-  {"title":"Churchill Insurance","url":"https://www.churchill.com","category":"Banking & Insurance"},
-  {"title":"Hire Car Excess Insurance","url":"https://www.carhireexcess.com","category":"Banking & Insurance"},
-  {"title":"ripe - Dinghy Insurance","url":"https://www.ripeinsurance.co.uk/login","category":"Banking & Insurance"},
-  {"title":"Teachers Pension","url":"https://www.teacherspensions.co.uk/members/member-login.aspx","category":"Banking & Insurance"},
-  {"title":"Blockchain Site","url":"https://andersbrownworth.com/blockchain","category":"Finance"},
-  {"title":"Bonner PR","url":"https://www.bonnerprivateresearch.com","category":"Finance"},
-  {"title":"Bytetree","url":"https://www.bytetree.com/the-multi-asset-investor","category":"Finance"},
-  {"title":"Chards","url":"https://www.chards.co.uk","category":"Finance"},
-  {"title":"Coinbase","url":"https://www.coinbase.com/en-gb/explore","category":"Finance"},
-  {"title":"Epsilon Theory","url":"https://www.epsilontheory.com","category":"Finance"},
-  {"title":"Famers Fable","url":"https://www.farmersfable.org","category":"Finance"},
-  {"title":"Halifax","url":"https://share-dealing.halifaxsharedealing-online.co.uk","category":"Finance"},
-  {"title":"HL","url":"https://www.hl.co.uk/shares","category":"Finance"},
-  {"title":"Interactive Brokers","url":"https://www.interactivebrokers.co.uk/portal/#/dashboard/positions","category":"Finance"},
-  {"title":"Myrmikan","url":"http://www.myrmikan.com/port","category":"Finance"},
-  {"title":"Naval","url":"https://nav.al","category":"Finance"},
-  {"title":"Southbank","url":"https://www.southbankresearch.com","category":"Finance"},
-  {"title":"Taleb","url":"https://fooledbyrandomness.com","category":"Finance"},
-  {"title":"App - CW notes","url":"https://jqw22.github.io/cwtext/","category":"Frequent links"},
-  {"title":"App - Dance videos","url":"https://jqw22.github.io/dance/","category":"Frequent links"},
-  {"title":"App - Simple Notes","url":"https://jqw22.github.io/notebook/","category":"Frequent links"},
-  {"title":"Google Maps","url":"https://www.google.com/maps","category":"Frequent links"},
-  {"title":"jamesdewhurst.uk","url":"http://www.jamesdewhurst.uk","category":"Frequent links"},
-  {"title":"League of Legends","url":"https://lolesports.com/en-GB/leagues/first_stand,lck,lec,msi,worlds","category":"Frequent links"},
-  {"title":"REM email","url":"https://login.microsoftonline.com","category":"Frequent links"},
-  {"title":"Samaritans","url":"https://samaritans.okta-emea.com/","category":"Frequent links"},
-  {"title":"Three Rings","url":"https://www.3r.org.uk/auth","category":"Frequent links"},
-  {"title":"YouTube","url":"https://www.youtube.com","category":"Frequent links"},
-  {"title":"Gov.uk","url":"https://www.access.service.gov.uk/login/signin/creds","category":"Gov"},
-  {"title":"HM Land Registry","url":"https://propertyalert.landregistry.gov.uk/propertyalert/myalerts/entry?SignIn=Sign+in","category":"Gov"},
-  {"title":"Student Finance","url":"https://logon.slc.co.uk/welcome/secured/login?_locale=en_GB&cookieConsent=accept","category":"Gov"},
-  {"title":"Teacher Pensions","url":"https://www.teacherspensions.co.uk/members/member-login.aspx","category":"Gov"},
-  {"title":"Cholesterol Converter","url":"https://www.omnicalculator.com/health/cholesterol-units","category":"Health"},
-  {"title":"Doctor","url":"https://www.thependlemedicalpartnership.nhs.uk","category":"Health"},
-  {"title":"Food for the brain","url":"https://foodforthebrain.org","category":"Health"},
-  {"title":"Physio","url":"https://www.theperformance-lab.co.uk","category":"Health"},
-  {"title":"PSA Test","url":"https://bkpca.mypsatests.org.uk/Login","category":"Health"},
-  {"title":"Suppliments - Royal Oak","url":"https://royaloakhealth.co.uk","category":"Health"},
-  {"title":"BT Broadband","url":"https://www.BT.com","category":"Home / Utilities"},
-  {"title":"Lebara Mobiles","url":"https://www.lebara.co.uk/en/home.html","category":"Home / Utilities"},
-  {"title":"Octopus Energy","url":"https://octopus.energy","category":"Home / Utilities"},
-  {"title":"TV License","url":"https://www.tvlicensing.co.uk/yourlicense","category":"Home / Utilities"},
-  {"title":"Carl Chapman","url":"https://www.carlchapman.co.uk","category":"Jung"},
-  {"title":"Cecile Buckenmeyer","url":"https://www.cecilebuckenmeyer.co.uk","category":"Jung"},
-  {"title":"igap","url":"https://www.igap.co.uk","category":"Jung"},
-  {"title":"Jung Institute","url":"https://www.junginstitut.ch/en","category":"Jung"},
-  {"title":"Mark Saban","url":"http://www.marksaban.co.uk/index.html","category":"Jung"},
-  {"title":"Speaking of Jung","url":"https://speakingofjung.com","category":"Jung"},
-  {"title":"Bookstr","url":"https://bookstr.xyz","category":"Nostr"},
-  {"title":"Buzz Communities","url":"https://app.builderlab.xyz/buzz","category":"Nostr"},
-  {"title":"GitHub","url":"https://github.com/jqw22","category":"Nostr"},
-  {"title":"Nostr","url":"https://nostr.com","category":"Nostr"},
-  {"title":"Nostrplebs","url":"https://nostrplebs.com","category":"Nostr"},
-  {"title":"Shakespeare","url":"https://shakespeare.diy/","category":"Nostr"},
-  {"title":"Craig Roberts Photography","url":"https://craigrobertsphotography.co.uk","category":"Photography"},
-  {"title":"Fasthosts login","url":"https://admin.fasthosts.co.uk","category":"Photography"},
-  {"title":"Simlab Photos","url":"https://www.simlab.co.uk","category":"Photography"},
-  {"title":"Wordpress","url":"https://wordpress.com/log-in/","category":"Photography"},
-  {"title":"X-T4 Manual","url":"https://fujifilm-dsc.com/en/manual/x-t4","category":"Photography"},
-  {"title":"Amazon","url":"https://www.amazon.co.uk","category":"Shopping"},
-  {"title":"Classic Tools","url":"https://www.classichandtools.com","category":"Shopping"},
-  {"title":"Coal shop","url":"https://supaheatfuels.co.uk","category":"Shopping"},
-  {"title":"Honest Grapes","url":"https://www.honestgrapes.co.uk/account/login?return_url=%2Faccount","category":"Shopping"},
-  {"title":"Nespresso","url":"https://www.nespresso.com/uk/en","category":"Shopping"},
-  {"title":"Putnams","url":"https://putnams.co.uk","category":"Shopping"},
-  {"title":"Tea Shop","url":"https://www.exoticteapot.co.uk","category":"Shopping"},
-  {"title":"Wood Supplier - Lekto","url":"https://www.lektowoodfuels.co.uk/","category":"Shopping"},
-  {"title":"Airbnb","url":"https://www.airbnb.co.uk","category":"Travel"},
-  {"title":"BA.com","url":"https://www.ba.com","category":"Travel"},
-  {"title":"Booking.com","url":"https://www.booking.com","category":"Travel"},
-  {"title":"British Pilgrimages","url":"https://www.britishpilgrimage.org","category":"Travel"},
-  {"title":"Easyjet","url":"https://www.easyjet.com/en","category":"Travel"},
-  {"title":"Enterprise Car Hire","url":"https://www.enterprise.co.uk/en","category":"Travel"},
-  {"title":"Flight Radar","url":"https://www.flightradar24.com","category":"Travel"},
-  {"title":"Google Flights","url":"https://www.google.com/travel","category":"Travel"},
-  {"title":"Holiday Cottages","url":"https://www.cottages.com","category":"Travel"},
-  {"title":"i-escape","url":"https://www.i-escape.com","category":"Travel"},
-  {"title":"Manchester Airport Parking","url":"https://www.manchesterairport.co.uk/booking","category":"Travel"},
-  {"title":"Olhao Appartments","url":"https://www.whiteterraces.com","category":"Travel"},
-  {"title":"Olhao Convento","url":"https://www.conventoolhao.com/book","category":"Travel"},
-  {"title":"Ryanair","url":"https://www.ryanair.com","category":"Travel"},
-  {"title":"Sawdays","url":"https://www.sawdays.co.uk","category":"Travel"},
-  {"title":"Seat Spy","url":"https://www.seatspy.com","category":"Travel"},
-  {"title":"Trainline","url":"https://www.thetrainline.com","category":"Travel"},
-  {"title":"Unique Home Stays cottages","url":"https://www.uniquehomestays.com","category":"Travel"},
-  {"title":"With Locals","url":"https://www.withlocals.com","category":"Travel"},
-  {"title":"Apple icloud","url":"https://www.icloud.com","category":"Webapps"},
-  {"title":"Archive Books","url":"https://archive.org","category":"Webapps"},
-  {"title":"DrawIO","url":"https://www.drawio.com","category":"Webapps"},
-  {"title":"Family Search","url":"https://ident.familysearch.org/identity/login/?state=https://www.familysearch.org/en/united-kingdom/","category":"Webapps"},
-  {"title":"iLovePDF","url":"https://www.ilovepdf.com","category":"Webapps"},
-  {"title":"Incogni","url":"https://incogni.com/auth/login","category":"Webapps"},
-  {"title":"OneDrive","url":"https://onedrive.live.com","category":"Webapps"},
-  {"title":"Proton Drive","url":"https://drive.proton.me","category":"Webapps"},
-  {"title":"Spotify","url":"https://open.spotify.com","category":"Webapps"},
-  {"title":"Standard Notes","url":"https://app.standardnotes.com","category":"Webapps"}
-];
-var CATS = ["Frequent links","Media / Entertainment","Webapps","Nostr","Shopping","Travel","Finance","Banking & Insurance","Gov","Home / Utilities","Photography","Jung","Health"];
-var STOR = "links_overlay";
-var base = BASE_LINKS;
+(function () {
+  "use strict";
 
-function gOv() { try { var r=localStorage.getItem(STOR); return r?JSON.parse(r):{added:[],removed:[]}; } catch(e) { return {added:[],removed:[]}; } }
-function sOv(o) { localStorage.setItem(STOR,JSON.stringify(o)); }
-function lk(l) { return l.title+"|||"+l.url; }
-function gLinks() {
-  var o=gOv(), rk=new Set(o.removed.map(lk)), e=base.filter(function(l){return!rk.has(lk(l));});
-  for(var i=0;i<o.added.length;i++) e.push(o.added[i]);
-  e.sort(function(a,b){return a.category.localeCompare(b.category)||a.title.localeCompare(b.title);});
-  return e;
-}
-function addLink(t,u,c) { var o=gOv(); o.added.push({title:t.trim(),url:u.trim(),category:c}); sOv(o); render(); }
-function delLink(i) { var ls=gLinks(), l=ls[i]; if(!l)return; var k=lk(l), o=gOv(), ai=-1;
-  for(var j=0;j<o.added.length;j++){if(lk(o.added[j])===k){ai=j;break;}}
-  if(ai>=0) o.added.splice(ai,1); else o.removed.push({title:l.title,url:l.url}); sOv(o); render(); }
-function saveToFile() {
-  var ls=gLinks(), lines=[], push=function(s){lines.push(s);};
-  for(var i=0;i<ls.length;i++){
-    var l=ls[i], t=JSON.stringify(l.title), u=JSON.stringify(l.url), c=JSON.stringify(l.category);
-    if(i<ls.length-1) push('  {"title":'+t+',"url":'+u+',"category":'+c+'},');
-    else push('  {"title":'+t+',"url":'+u+',"category":'+c+'}');
+  var CFG_KEY = "links_gh_cfg";
+  var CACHE_KEY = "links_cache_v1";
+
+  var CATS = ["Frequent links","Media / Entertainment","Webapps","Nostr","Shopping","Travel","Finance","Banking & Insurance","Gov","Home / Utilities","Photography","Jung","Health"];
+
+  var state = { links: [], sha: null, pending: false };
+  var statusTimer = null;
+
+  /* ------------------------------------------------------------------ utils */
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s == null ? "" : s); }
+  function b64enc(str) {
+    var bytes = new TextEncoder().encode(str), bin = "";
+    for (var i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+    return btoa(bin);
   }
-  var newData=lines.join('\n'), html=document.documentElement.outerHTML;
-  var re=/var BASE_LINKS = \[[\s\S]*?\n\];/;
-  html=html.replace(re,'var BASE_LINKS = [\n'+newData+'\n];');
-  html=html.replace(' class="stackedit editing"',' class="stackedit"');
-  var b=new Blob([html],{type:"text/html"}), a=document.createElement("a");
-  a.href=URL.createObjectURL(b); a.download="index.html"; a.click(); URL.revokeObjectURL(a.href);
-  base=ls; sOv({added:[],removed:[]}); render();
-}
-function importJSON(f) { var r=new FileReader(); r.onload=function(){
-  try{var d=JSON.parse(r.result);if(!Array.isArray(d)){alert("Invalid format.");return;}
-  if(!confirm("Replace all links with imported file?"))return;base=d;sOv({added:[],removed:[]});render();}
-  catch(e){alert("Could not parse JSON.");}}; r.readAsText(f); }
-function render() {
-  var ls=gLinks();
-  document.getElementById("toc-list").innerHTML = CATS.map(function(c){return'<li><a href="#'+encodeURIComponent(c)+'">'+escH(c)+'</a></li>';}).join("");
-  var h="",c=document.getElementById("links-container");
-  for(var ci=0;ci<CATS.length;ci++){var ct=CATS[ci], cl=[];
-    h+='<h5 id="'+encodeURIComponent(ct)+'">'+escH(ct)+'</h5>\n';
-    for(var i=0;i<ls.length;i++){if(ls[i].category===ct)cl.push({l:ls[i],idx:i});}
-    if(cl.length===0)h+='<p class="empty-category">No links yet.</p>\n';
-    else for(var j=0;j<cl.length;j++){var x=cl[j];
-      h+='<span class="link-row"><a href="'+escA(x.l.url)+'" target="_blank">'+escH(x.l.title)+'</a><button class="del-btn" data-idx="'+x.idx+'" title="Remove">&times;</button></span><br>\n';}
+  function b64dec(b64) {
+    var bin = atob(String(b64).replace(/\s/g, ""));
+    var bytes = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return new TextDecoder().decode(bytes);
   }
-  c.innerHTML=h;
-  document.getElementById("link-category").innerHTML = CATS.map(function(x){return'<option value="'+escA(x)+'">'+escH(x)+'</option>';}).join("");
-  var bs=c.querySelectorAll(".del-btn"); for(var b=0;b<bs.length;b++){bs[b].onclick=function(){if(confirm("Remove this link?"))delLink(parseInt(this.dataset.idx));};}
-}
-function escH(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML;}
-function escA(s){return s.replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
-document.addEventListener("DOMContentLoaded",function(){
-  render();
-  document.getElementById("toggle-edit").onclick=function(){document.body.classList.toggle("editing");this.textContent=document.body.classList.contains("editing")?"Done Editing":"Edit Links";};
-  document.getElementById("btn-add").onclick=function(){
-    var t=document.getElementById("link-title").value.trim(), u=document.getElementById("link-url").value.trim(), c=document.getElementById("link-category").value;
-    if(!t){alert("Please enter a title.");return;} if(!u){alert("Please enter a URL.");return;} if(!/^https?:\/\/.+/i.test(u)){alert("URL must start with http:// or https://");return;}
-    addLink(t,u,c); document.getElementById("link-title").value=""; document.getElementById("link-url").value="https://";
-  };
-  document.getElementById("link-url").onkeydown=function(e){if(e.key==="Enter")document.getElementById("btn-add").click();};
-  document.getElementById("link-title").onkeydown=function(e){if(e.key==="Enter")document.getElementById("btn-add").click();};
-  document.getElementById("btn-export").onclick=saveToFile;
-  var fi=document.getElementById("import-file");
-  document.getElementById("btn-import").onclick=function(){fi.click();};
-  fi.onchange=function(){if(fi.files[0])importJSON(fi.files[0]);fi.value="";};
-});
+  function setStatus(kind, msg, actions) {
+    var el = $("status");
+    if (statusTimer) { clearTimeout(statusTimer); statusTimer = null; }
+    el.className = "status show " + kind;
+    el.textContent = "";
+    var span = document.createElement("span");
+    span.textContent = msg;
+    el.appendChild(span);
+    (actions || []).forEach(function (a) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "status-btn";
+      b.textContent = a.label;
+      b.onclick = a.fn;
+      el.appendChild(b);
+    });
+    if (kind === "ok" && !(actions && actions.length)) {
+      statusTimer = setTimeout(function () { el.className = "status"; el.textContent = ""; }, 6000);
+    }
+  }
+
+  /* ----------------------------------------------------------------- config */
+  function getCfg() {
+    var c = {};
+    try { c = JSON.parse(localStorage.getItem(CFG_KEY)) || {}; } catch (e) { c = {}; }
+    if (!c.owner) c.owner = "jqw22";
+    if (!c.repo) c.repo = "links";
+    if (!c.branch) c.branch = "main";
+    if (!c.path) c.path = "links.json";
+    return c;
+  }
+  function saveCfg(c) { localStorage.setItem(CFG_KEY, JSON.stringify(c)); }
+
+  /* ------------------------------------------------------------ local cache */
+  function putCache(links, pending) {
+    try { localStorage.setItem(CACHE_KEY, JSON.stringify({ links: links, pending: !!pending, t: Date.now() })); } catch (e) {}
+  }
+  function readCache() {
+    try {
+      var d = JSON.parse(localStorage.getItem(CACHE_KEY));
+      if (d && Array.isArray(d.links)) return d;
+    } catch (e) {}
+    return null;
+  }
+
+  /* ----------------------------------------------------------------- github */
+  function contentsBase(cfg) {
+    return "https://api.github.com/repos/" + encodeURIComponent(cfg.owner) + "/" + encodeURIComponent(cfg.repo) +
+      "/contents/" + cfg.path.split("/").map(encodeURIComponent).join("/");
+  }
+  function ghHeaders(cfg, json) {
+    var h = { "Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28" };
+    if (json) h["Content-Type"] = "application/json";
+    if (cfg.token) h["Authorization"] = "Bearer " + cfg.token;
+    return h;
+  }
+  function normalise(arr) {
+    var out = [];
+    for (var i = 0; i < arr.length; i++) {
+      var l = arr[i];
+      if (!l || typeof l !== "object") continue;
+      var t = esc(l.title).trim(), u = esc(l.url).trim();
+      if (!t || !u) continue;
+      out.push({ title: t, url: u, category: esc(l.category).trim() || "Uncategorised" });
+    }
+    return out;
+  }
+  function fetchJson(text) {
+    var links = JSON.parse(text);
+    if (!Array.isArray(links)) throw new Error("links.json does not contain a list");
+    return normalise(links);
+  }
+
+  function fetchApi(cfg) {
+    return fetch(contentsBase(cfg) + "?ref=" + encodeURIComponent(cfg.branch), { headers: ghHeaders(cfg, false), cache: "no-store" })
+      .then(function (res) {
+        if (res.status === 404) return { missing: true };
+        if (!res.ok) {
+          var msg = "GitHub API error " + res.status;
+          if (res.status === 401) msg = "GitHub token is invalid or expired";
+          if (res.status === 403) msg = "GitHub denied the request (rate limit or missing permission)";
+          var e = new Error(msg); e.status = res.status; throw e;
+        }
+        return res.json().then(function (data) {
+          if (Array.isArray(data)) throw new Error("The configured path is a folder, not a file");
+          return { links: fetchJson(b64dec(data.content)), sha: data.sha };
+        });
+      });
+  }
+
+  function fetchRaw(cfg) {
+    var url = "https://raw.githubusercontent.com/" + encodeURIComponent(cfg.owner) + "/" + encodeURIComponent(cfg.repo) +
+      "/" + encodeURIComponent(cfg.branch) + "/" + cfg.path.split("/").map(encodeURIComponent).join("/") + "?_=" + Date.now();
+    return fetch(url, { cache: "no-store" }).then(function (res) {
+      if (!res.ok) throw new Error("raw file HTTP " + res.status);
+      return res.text().then(function (t) { return { links: fetchJson(t), sha: null, raw: true }; });
+    });
+  }
+
+  function getSha(cfg) {
+    return fetch(contentsBase(cfg) + "?ref=" + encodeURIComponent(cfg.branch), { headers: ghHeaders(cfg, false), cache: "no-store" })
+      .then(function (res) {
+        if (res.status === 404) return null;
+        if (!res.ok) throw new Error("Cannot read file (HTTP " + res.status + ")");
+        return res.json().then(function (d) { return Array.isArray(d) ? null : d.sha; });
+      });
+  }
+
+  function putFile(cfg, links, sha) {
+    var body = {
+      message: "Update links (" + new Date().toISOString().slice(0, 16).replace("T", " ") + ")",
+      content: b64enc(JSON.stringify(links, null, 2) + "\n"),
+      branch: cfg.branch
+    };
+    if (sha) body.sha = sha;
+    return fetch(contentsBase(cfg), { method: "PUT", headers: ghHeaders(cfg, true), body: JSON.stringify(body) })
+      .then(function (res) {
+        if (res.ok) return res.json();
+        return res.json().catch(function () { return {}; }).then(function (j) {
+          var e = new Error(j.message || ("HTTP " + res.status)); e.status = res.status; throw e;
+        });
+      });
+  }
+
+  /* -------------------------------------------------------------- load/save */
+  function sortLinks(links) {
+    return links.slice().sort(function (a, b) {
+      return a.category.localeCompare(b.category) || a.title.localeCompare(b.title);
+    });
+  }
+
+  function loadRemote(cfg) {
+    return fetchApi(cfg).catch(function (err) {
+      return fetchRaw(cfg).then(function (r) { r.note = err.message; return r; });
+    }).then(function (r) {
+      if (r.missing) { state.links = []; state.sha = null; return { created: true }; }
+      state.links = r.links; state.sha = r.sha || null;
+      return { raw: !!r.raw, note: r.note };
+    });
+  }
+
+  function reload() {
+    var cfg = getCfg();
+    setStatus("info", "Loading links…");
+    loadRemote(cfg).then(function (info) {
+      state.pending = false;
+      putCache(state.links, false);
+      render();
+      if (info.created) setStatus("ok", "No links.json found in the repo yet — it will be created when you add your first link.");
+      else if (info.raw) setStatus("info", "Loaded from GitHub's raw file (" + (info.note || "") + "). Edits still save normally.");
+      else setStatus("ok", "Loaded " + state.links.length + " links from GitHub \u2713");
+    }).catch(function (e) {
+      render();
+      setStatus("err", "Could not load from GitHub: " + e.message, [
+        { label: "Retry", fn: reload },
+        { label: "Setup", fn: function () { $("setup").open = true; $("setup").scrollIntoView(); } }
+      ]);
+    });
+  }
+
+  function commit() {
+    var cfg = getCfg();
+    if (!cfg.token) {
+      state.pending = true; putCache(state.links, true);
+      setStatus("info", "Saved in this browser only. Add a GitHub token in Setup to sync across devices.", [
+        { label: "Setup", fn: function () { $("setup").open = true; $("setup").scrollIntoView(); } },
+        { label: "Download backup", fn: downloadBackup }
+      ]);
+      return;
+    }
+    var links = sortLinks(state.links);
+    putFile(cfg, links, state.sha).catch(function (e) {
+      if (e.status === 409 || e.status === 422) {
+        // stale sha: another device wrote in the meantime → refresh and retry
+        return getSha(cfg).then(function (sha) { return putFile(cfg, links, sha); });
+      }
+      throw e;
+    }).then(function (out) {
+      state.links = links;
+      state.sha = (out && out.content && out.content.sha) || null;
+      state.pending = false;
+      putCache(links, false);
+      render();
+      setStatus("ok", "Saved to GitHub \u2713 — reload this page on any other device and it will be there.");
+    }).catch(function (e) {
+      state.pending = true; putCache(state.links, true);
+      setStatus("err", "Could not save to GitHub: " + e.message + ". Your change is kept in this browser.", [
+        { label: "Retry save", fn: commit },
+        { label: "Download backup", fn: downloadBackup }
+      ]);
+    });
+  }
+
+  function downloadBackup() {
+    var b = new Blob([JSON.stringify(sortLinks(state.links), null, 2) + "\n"], { type: "application/json" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(b); a.download = "links.json"; a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
+  }
+
+  /* ---------------------------------------------------------------- render */
+  function editing() { return document.body.classList.contains("editing"); }
+
+  function categoryList() {
+    var list = CATS.slice();
+    state.links.forEach(function (l) { if (list.indexOf(l.category) < 0) list.push(l.category); });
+    return list;
+  }
+
+  function render() {
+    var cats = categoryList();
+    $("toc-list").innerHTML = cats.map(function (c) {
+      return '<li><a href="#' + encodeURIComponent(c) + '">' + c.replace(/&/g, "&amp;").replace(/</g, "&lt;") + "</a></li>";
+    }).join("");
+
+    var byCat = {};
+    state.links.forEach(function (l) { (byCat[l.category] = byCat[l.category] || []).push(l); });
+    Object.keys(byCat).forEach(function (k) { byCat[k].sort(function (a, b) { return a.title.localeCompare(b.title); }); });
+
+    var cont = $("links-container");
+    cont.textContent = "";
+    cats.forEach(function (ct) {
+      var h = document.createElement("h5");
+      h.id = encodeURIComponent(ct);
+      h.textContent = ct;
+      cont.appendChild(h);
+      var cl = byCat[ct] || [];
+      if (!cl.length) {
+        var p = document.createElement("p");
+        p.className = "empty-category"; p.textContent = "No links yet.";
+        cont.appendChild(p); return;
+      }
+      cl.forEach(function (l) {
+        var row = document.createElement("span");
+        row.className = "link-row";
+        var a = document.createElement("a");
+        a.href = l.url; a.target = "_blank"; a.rel = "noopener"; a.textContent = l.title;
+        row.appendChild(a);
+        if (editing()) {
+          var b = document.createElement("button");
+          b.type = "button"; b.className = "del-btn"; b.title = "Remove"; b.innerHTML = "&times;";
+          b.onclick = function () { if (confirm('Remove "' + l.title + '"?')) removeLink(l); };
+          row.appendChild(b);
+        }
+        cont.appendChild(row);
+        cont.appendChild(document.createElement("br"));
+      });
+    });
+
+    var sel = $("link-category");
+    var cur = sel.value;
+    sel.textContent = "";
+    cats.forEach(function (c) {
+      var o = document.createElement("option"); o.value = c; o.textContent = c; sel.appendChild(o);
+    });
+    if (cats.indexOf(cur) >= 0) sel.value = cur;
+
+    $("count").textContent = state.links.length + " link" + (state.links.length === 1 ? "" : "s");
+  }
+
+  function addLink(t, u, c) {
+    for (var i = 0; i < state.links.length; i++) {
+      if (state.links[i].url === u && state.links[i].title === t) { alert("That link is already in the list."); return; }
+    }
+    state.links.push({ title: t, url: u, category: c });
+    render();
+    commit();
+  }
+  function removeLink(l) {
+    var i = state.links.indexOf(l);
+    if (i < 0) return;
+    state.links.splice(i, 1);
+    render();
+    commit();
+  }
+
+  /* ---------------------------------------------------------------- set-up */
+  function fillSetup() {
+    var c = getCfg();
+    $("cfg-owner").value = c.owner;
+    $("cfg-repo").value = c.repo;
+    $("cfg-branch").value = c.branch;
+    $("cfg-path").value = c.path;
+    $("cfg-token").value = c.token || "";
+  }
+  function readSetup() {
+    return {
+      owner: $("cfg-owner").value.trim(),
+      repo: $("cfg-repo").value.trim(),
+      branch: $("cfg-branch").value.trim() || "main",
+      path: $("cfg-path").value.trim() || "links.json",
+      token: $("cfg-token").value.trim()
+    };
+  }
+
+  function init() {
+    fillSetup();
+    if (!getCfg().token) $("setup").open = true;
+
+    $("toggle-edit").onclick = function () {
+      document.body.classList.toggle("editing");
+      this.textContent = editing() ? "Done Editing" : "Edit Links";
+      render();
+    };
+    $("btn-refresh").onclick = reload;
+    $("cfg-save").onclick = function () {
+      var c = readSetup();
+      if (!c.owner || !c.repo) { setStatus("err", "Owner and repo are required."); return; }
+      saveCfg(c);
+      setStatus("ok", "Settings saved to this browser.");
+      reload();
+    };
+    $("cfg-test").onclick = function () {
+      var c = readSetup();
+      if (!c.owner || !c.repo) { setStatus("err", "Owner and repo are required."); return; }
+      setStatus("info", "Testing…");
+      var hdrs = ghHeaders(c, false);
+      fetch(contentsBase(c) + "?ref=" + encodeURIComponent(c.branch), { headers: hdrs, cache: "no-store" })
+        .then(function (res) {
+          if (res.status === 404) { setStatus("info", "Repo/branch reachable, but " + c.path + " doesn't exist yet — it will be created on first save."); return; }
+          if (!res.ok) throw new Error("HTTP " + res.status + (res.status === 401 ? " (bad token)" : ""));
+          return res.json().then(function (d) {
+            setStatus("ok", "Connection OK — found " + c.path + (c.token ? " with write-ready token." : " (read-only: no token set)."));
+          });
+        })
+        .catch(function (e) { setStatus("err", "Connection failed: " + e.message); });
+    };
+
+    $("btn-add").onclick = function () {
+      var t = $("link-title").value.trim(), u = $("link-url").value.trim(), c = $("link-category").value;
+      if (!t) { alert("Please enter a title."); return; }
+      if (!u) { alert("Please enter a URL."); return; }
+      if (!/^https?:\/\/.+/i.test(u)) { alert("URL must start with http:// or https://"); return; }
+      addLink(t, u, c);
+      $("link-title").value = "";
+      $("link-url").value = "https://";
+      $("link-title").focus();
+    };
+    $("link-url").onkeydown = function (e) { if (e.key === "Enter") $("btn-add").click(); };
+    $("link-title").onkeydown = function (e) { if (e.key === "Enter") $("btn-add").click(); };
+
+    var cache = readCache();
+    if (cache && cache.pending && cache.links.length) {
+      state.links = cache.links;
+      state.pending = true;
+      render();
+      setStatus("info", "You have unsaved changes from a previous session (" + cache.links.length + " links).", [
+        { label: "Retry save", fn: commit },
+        { label: "Download backup", fn: downloadBackup },
+        { label: "Discard & reload", fn: reload }
+      ]);
+      getSha(getCfg()).then(function (sha) { state.sha = sha; }).catch(function () {});
+      return;
+    }
+    if (cache && cache.links && cache.links.length) { state.links = cache.links; render(); }
+    reload();
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+  else init();
+})();
 </script>
-
-
-<script src="webkit-masked-url://hidden/"></script><script src="webkit-masked-url://hidden/"></script></body></html>
+</body>
+</html>
