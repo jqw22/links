@@ -265,6 +265,11 @@
     "category": "Media / Entertainment"
   },
   {
+    "title": "Xero",
+    "url": "https://login.xero.com/identity/user/login",
+    "category": "Media / Entertainment"
+  },
+  {
     "title": "Bookstr",
     "url": "https://bookstr.xyz",
     "category": "Nostr"
