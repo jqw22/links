@@ -540,6 +540,11 @@
     "category": "Webapps"
   },
   {
+    "title": "Claude Console",
+    "url": "https://platform.claude.com/dashboard",
+    "category": "Webapps"
+  },
+  {
     "title": "Deepseek",
     "url": "https://platform.deepseek.com/usage",
     "category": "Webapps"
