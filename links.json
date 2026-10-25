@@ -603,5 +603,10 @@
     "title": "Standard Notes",
     "url": "https://app.standardnotes.com",
     "category": "Webapps"
+  },
+  {
+    "title": "Supabase",
+    "url": "https://supabase.com/",
+    "category": "Webapps"
   }
 ]
