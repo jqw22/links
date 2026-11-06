@@ -18,9 +18,12 @@ same list.
 Saving requires a GitHub token, which is stored only in that browser:
 
 1. Open the page and expand **⚙ GitHub sync setup**.
-2. Create a token at
-   [github.com/settings/tokens/new?scopes=public_repo](https://github.com/settings/tokens/new?scopes=public_repo&description=Links%20page)
-   (a classic token with the `public_repo` scope is enough for a public repo).
+2. Create a fine-grained token at
+   [github.com/settings/personal-access-tokens/new](https://github.com/settings/personal-access-tokens/new):
+   - Repository access: **Only select repositories** → `jqw22/links`
+   - Repository permissions: **Contents → Read and write** (nothing else)
+   - Pick an expiry; when it runs out, saves fail with "token is invalid or expired"
+     and you just create a new one and paste it in.
 3. Paste the token and click **Save settings**.
 
 Owner (`jqw22`), repo (`links`), branch (`main`) and path (`links.json`) are
