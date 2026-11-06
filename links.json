@@ -65,6 +65,36 @@
     "category": "Apps"
   },
   {
+    "title": "Bookstr",
+    "url": "https://bookstr.xyz",
+    "category": "DevTools"
+  },
+  {
+    "title": "Buzz Communities",
+    "url": "https://app.builderlab.xyz/buzz",
+    "category": "DevTools"
+  },
+  {
+    "title": "GitHub",
+    "url": "https://github.com/jqw22",
+    "category": "DevTools"
+  },
+  {
+    "title": "Nostr",
+    "url": "https://nostr.com",
+    "category": "DevTools"
+  },
+  {
+    "title": "Nostrplebs",
+    "url": "https://nostrplebs.com",
+    "category": "DevTools"
+  },
+  {
+    "title": "Shakespeare",
+    "url": "https://shakespeare.diy/",
+    "category": "DevTools"
+  },
+  {
     "title": "Blockchain Site",
     "url": "https://andersbrownworth.com/blockchain",
     "category": "Finance"
@@ -278,36 +308,6 @@
     "title": "Xero",
     "url": "https://login.xero.com/identity/user/login",
     "category": "Media / Entertainment"
-  },
-  {
-    "title": "Bookstr",
-    "url": "https://bookstr.xyz",
-    "category": "Nostr"
-  },
-  {
-    "title": "Buzz Communities",
-    "url": "https://app.builderlab.xyz/buzz",
-    "category": "Nostr"
-  },
-  {
-    "title": "GitHub",
-    "url": "https://github.com/jqw22",
-    "category": "Nostr"
-  },
-  {
-    "title": "Nostr",
-    "url": "https://nostr.com",
-    "category": "Nostr"
-  },
-  {
-    "title": "Nostrplebs",
-    "url": "https://nostrplebs.com",
-    "category": "Nostr"
-  },
-  {
-    "title": "Shakespeare",
-    "url": "https://shakespeare.diy/",
-    "category": "Nostr"
   },
   {
     "title": "Craig Roberts Photography",
