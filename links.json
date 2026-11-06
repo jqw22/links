@@ -115,6 +115,11 @@
     "category": "DevTools"
   },
   {
+    "title": "Cloudfare",
+    "url": "https://dash.cloudflare.com/login",
+    "category": "DevTools"
+  },
+  {
     "title": "Deepseek",
     "url": "https://platform.deepseek.com/usage",
     "category": "DevTools"
