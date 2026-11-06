@@ -110,6 +110,11 @@
     "category": "DevTools"
   },
   {
+    "title": "Claude Console",
+    "url": "https://platform.claude.com/dashboard",
+    "category": "DevTools"
+  },
+  {
     "title": "GitHub",
     "url": "https://github.com/jqw22",
     "category": "DevTools"
