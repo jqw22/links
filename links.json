@@ -65,6 +65,81 @@
     "category": "Apps"
   },
   {
+    "title": "Apple icloud",
+    "url": "https://www.icloud.com",
+    "category": "Apps2"
+  },
+  {
+    "title": "Archive Books",
+    "url": "https://archive.org",
+    "category": "Apps2"
+  },
+  {
+    "title": "Claude",
+    "url": "https://claude.ai/new",
+    "category": "Apps2"
+  },
+  {
+    "title": "Claude Console",
+    "url": "https://platform.claude.com/dashboard",
+    "category": "Apps2"
+  },
+  {
+    "title": "Cloudflare",
+    "url": "https://dash.cloudflare.com/686b55aec021a263d49c812e3006e756/home",
+    "category": "Apps2"
+  },
+  {
+    "title": "Deepseek",
+    "url": "https://platform.deepseek.com/usage",
+    "category": "Apps2"
+  },
+  {
+    "title": "DrawIO",
+    "url": "https://www.drawio.com",
+    "category": "Apps2"
+  },
+  {
+    "title": "Family Search",
+    "url": "https://ident.familysearch.org/identity/login/?state=https://www.familysearch.org/en/united-kingdom/",
+    "category": "Apps2"
+  },
+  {
+    "title": "iLovePDF",
+    "url": "https://www.ilovepdf.com",
+    "category": "Apps2"
+  },
+  {
+    "title": "Incogni",
+    "url": "https://incogni.com/auth/login",
+    "category": "Apps2"
+  },
+  {
+    "title": "OneDrive",
+    "url": "https://onedrive.live.com",
+    "category": "Apps2"
+  },
+  {
+    "title": "Proton Drive",
+    "url": "https://drive.proton.me",
+    "category": "Apps2"
+  },
+  {
+    "title": "Spotify",
+    "url": "https://open.spotify.com",
+    "category": "Apps2"
+  },
+  {
+    "title": "Standard Notes",
+    "url": "https://app.standardnotes.com",
+    "category": "Apps2"
+  },
+  {
+    "title": "Supabase",
+    "url": "https://supabase.com/",
+    "category": "Apps2"
+  },
+  {
     "title": "Bookstr",
     "url": "https://bookstr.xyz",
     "category": "DevTools"
@@ -528,80 +603,5 @@
     "title": "UU",
     "url": "https://myaccount.unitedutilities.com/Secure/Authentication/Login",
     "category": "Utilities"
-  },
-  {
-    "title": "Apple icloud",
-    "url": "https://www.icloud.com",
-    "category": "Webapps"
-  },
-  {
-    "title": "Archive Books",
-    "url": "https://archive.org",
-    "category": "Webapps"
-  },
-  {
-    "title": "Claude",
-    "url": "https://claude.ai/new",
-    "category": "Webapps"
-  },
-  {
-    "title": "Claude Console",
-    "url": "https://platform.claude.com/dashboard",
-    "category": "Webapps"
-  },
-  {
-    "title": "Cloudflare",
-    "url": "https://dash.cloudflare.com/686b55aec021a263d49c812e3006e756/home",
-    "category": "Webapps"
-  },
-  {
-    "title": "Deepseek",
-    "url": "https://platform.deepseek.com/usage",
-    "category": "Webapps"
-  },
-  {
-    "title": "DrawIO",
-    "url": "https://www.drawio.com",
-    "category": "Webapps"
-  },
-  {
-    "title": "Family Search",
-    "url": "https://ident.familysearch.org/identity/login/?state=https://www.familysearch.org/en/united-kingdom/",
-    "category": "Webapps"
-  },
-  {
-    "title": "iLovePDF",
-    "url": "https://www.ilovepdf.com",
-    "category": "Webapps"
-  },
-  {
-    "title": "Incogni",
-    "url": "https://incogni.com/auth/login",
-    "category": "Webapps"
-  },
-  {
-    "title": "OneDrive",
-    "url": "https://onedrive.live.com",
-    "category": "Webapps"
-  },
-  {
-    "title": "Proton Drive",
-    "url": "https://drive.proton.me",
-    "category": "Webapps"
-  },
-  {
-    "title": "Spotify",
-    "url": "https://open.spotify.com",
-    "category": "Webapps"
-  },
-  {
-    "title": "Standard Notes",
-    "url": "https://app.standardnotes.com",
-    "category": "Webapps"
-  },
-  {
-    "title": "Supabase",
-    "url": "https://supabase.com/",
-    "category": "Webapps"
   }
 ]
