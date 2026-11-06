@@ -131,7 +131,8 @@
 
   var CATS = ["Frequent links","Media / Entertainment","Webapps","Nostr","Shopping","Travel","Finance","Banking & Insurance","Gov","Home / Utilities","Photography","Jung","Health"];
 
-  var state = { links: [], sha: null, pending: false };
+  // base = the list as last read from / written to GitHub; used to work out local adds/removes
+  var state = { links: [], base: null, sha: null, pending: false };
   var statusTimer = null;
 
   /* ------------------------------------------------------------------ utils */
@@ -183,7 +184,7 @@
 
   /* ------------------------------------------------------------ local cache */
   function putCache(links, pending) {
-    try { localStorage.setItem(CACHE_KEY, JSON.stringify({ links: links, pending: !!pending, t: Date.now() })); } catch (e) {}
+    try { localStorage.setItem(CACHE_KEY, JSON.stringify({ links: links, base: state.base, pending: !!pending, t: Date.now() })); } catch (e) {}
   }
   function readCache() {
     try {
@@ -247,15 +248,6 @@
     });
   }
 
-  function getSha(cfg) {
-    return fetch(contentsBase(cfg) + "?ref=" + encodeURIComponent(cfg.branch), { headers: ghHeaders(cfg, false), cache: "no-store" })
-      .then(function (res) {
-        if (res.status === 404) return null;
-        if (!res.ok) throw new Error("Cannot read file (HTTP " + res.status + ")");
-        return res.json().then(function (d) { return Array.isArray(d) ? null : d.sha; });
-      });
-  }
-
   function putFile(cfg, links, sha) {
     var body = {
       message: "Update links (" + new Date().toISOString().slice(0, 16).replace("T", " ") + ")",
@@ -272,6 +264,29 @@
       });
   }
 
+  /* ------------------------------------------------------------------ merge */
+  function linkKey(l) { return l.title + "\n" + l.url + "\n" + l.category; }
+
+  // Three-way merge: apply this browser's changes (local vs base) on top of the
+  // latest remote list, so links added/removed on another device are kept.
+  // Without a base (e.g. old cached edits) only additions can be known, so it unions.
+  function mergeLinks(remote, base, local) {
+    var localKeys = {}, baseKeys = {}, out = [], seen = {};
+    local.forEach(function (l) { localKeys[linkKey(l)] = true; });
+    (base || []).forEach(function (l) { baseKeys[linkKey(l)] = true; });
+    function add(l) { var k = linkKey(l); if (!seen[k]) { seen[k] = true; out.push(l); } }
+    remote.forEach(function (l) {
+      var k = linkKey(l);
+      if (base && baseKeys[k] && !localKeys[k]) return; // removed here
+      add(l);
+    });
+    local.forEach(function (l) {
+      var k = linkKey(l);
+      if (!baseKeys[k]) add(l); // added here
+    });
+    return out;
+  }
+
   /* -------------------------------------------------------------- load/save */
   function sortLinks(links) {
     return links.slice().sort(function (a, b) {
@@ -283,8 +298,8 @@
     return fetchApi(cfg).catch(function (err) {
       return fetchRaw(cfg).then(function (r) { r.note = err.message; return r; });
     }).then(function (r) {
-      if (r.missing) { state.links = []; state.sha = null; return { created: true }; }
-      state.links = r.links; state.sha = r.sha || null;
+      if (r.missing) { state.links = []; state.base = []; state.sha = null; return { created: true }; }
+      state.links = r.links; state.base = r.links.slice(); state.sha = r.sha || null;
       return { raw: !!r.raw, note: r.note };
     });
   }
@@ -321,12 +336,16 @@
     var links = sortLinks(state.links);
     putFile(cfg, links, state.sha).catch(function (e) {
       if (e.status === 409 || e.status === 422) {
-        // stale sha: another device wrote in the meantime → refresh and retry
-        return getSha(cfg).then(function (sha) { return putFile(cfg, links, sha); });
+        // stale/missing sha: the file changed elsewhere → merge our edits into the latest version and retry
+        return fetchApi(cfg).then(function (r) {
+          links = sortLinks(mergeLinks(r.missing ? [] : r.links, state.base, state.links));
+          return putFile(cfg, links, r.missing ? null : r.sha);
+        });
       }
       throw e;
     }).then(function (out) {
       state.links = links;
+      state.base = links.slice();
       state.sha = (out && out.content && out.content.sha) || null;
       state.pending = false;
       putCache(links, false);
@@ -492,6 +511,7 @@
     var cache = readCache();
     if (cache && cache.pending && cache.links.length) {
       state.links = cache.links;
+      state.base = Array.isArray(cache.base) ? cache.base : null;
       state.pending = true;
       render();
       setStatus("info", "You have unsaved changes from a previous session (" + cache.links.length + " links).", [
@@ -499,10 +519,10 @@
         { label: "Download backup", fn: downloadBackup },
         { label: "Discard & reload", fn: reload }
       ]);
-      getSha(getCfg()).then(function (sha) { state.sha = sha; }).catch(function () {});
+      // sha stays null, so the first save gets a 422 and goes through the merge path
       return;
     }
-    if (cache && cache.links && cache.links.length) { state.links = cache.links; render(); }
+    if (cache && cache.links && cache.links.length) { state.links = cache.links; state.base = cache.links.slice(); render(); }
     reload();
   }
 
