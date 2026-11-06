@@ -7,17 +7,17 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%94%97%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="style.css">
 <style>
-  #add-link-form {
+  #add-link-form, #add-heading-form {
     background: #f5f5f5; border: 1px solid #ddd; border-radius: 6px;
     padding: 14px 16px; margin-bottom: 20px;
   }
-  #add-link-form h5 { margin: 0 0 10px 0; }
-  #add-link-form label { display: block; font-size: 0.85em; margin-bottom: 2px; color: #555; }
-  #add-link-form input, #add-link-form select {
+  #add-link-form h5, #add-heading-form h5 { margin: 0 0 10px 0; }
+  #add-link-form label, #add-heading-form label { display: block; font-size: 0.85em; margin-bottom: 2px; color: #555; }
+  #add-link-form input, #add-link-form select, #add-heading-form input {
     width: 100%; padding: 6px 8px; margin-bottom: 8px;
     border: 1px solid #ccc; border-radius: 4px; font-size: 0.9em; box-sizing: border-box;
   }
-  #add-link-form button {
+  #add-link-form button, #add-heading-form button {
     padding: 6px 16px; background: #4078c0; color: #fff;
     border: none; border-radius: 4px; cursor: pointer; font-size: 0.9em;
   }
@@ -127,6 +127,13 @@
       <label for="link-category">Category</label>
       <select id="link-category"></select>
       <button id="btn-add" type="button">Add Link</button>
+    </div>
+
+    <div id="add-heading-form" class="edit-ui">
+      <h5>Add a Heading</h5>
+      <label for="heading-name">Heading name</label>
+      <input type="text" id="heading-name" placeholder="e.g. Recipes">
+      <button id="btn-add-heading" type="button">Add Heading</button>
     </div>
 
     <div id="links-container"></div>
@@ -524,6 +531,21 @@
     commit();
   }
 
+  // A new heading has no links yet, so it lives only on this page until a link is added under it.
+  function addHeading(name) {
+    name = String(name || "").replace(/\s+/g, " ").trim();
+    if (!name) { alert("Please enter a heading name."); return false; }
+    var cats = categoryList();
+    for (var i = 0; i < cats.length; i++) {
+      if (cats[i].toLowerCase() === name.toLowerCase()) { alert('There is already a heading called "' + cats[i] + '".'); return false; }
+    }
+    state.emptyCats.push(name);
+    render();
+    $("link-category").value = name;
+    setStatus("info", '"' + name + '" added. Add a link under it to save it to GitHub.');
+    return true;
+  }
+
   function addLink(t, u, c) {
     for (var i = 0; i < state.links.length; i++) {
       if (state.links[i].url === u && state.links[i].title === t) { alert("That link is already in the list."); return; }
@@ -607,6 +629,13 @@
     };
     $("link-url").onkeydown = function (e) { if (e.key === "Enter") $("btn-add").click(); };
     $("link-title").onkeydown = function (e) { if (e.key === "Enter") $("btn-add").click(); };
+    $("btn-add-heading").onclick = function () {
+      if (addHeading($("heading-name").value)) {
+        $("heading-name").value = "";
+        $("link-title").focus();
+      }
+    };
+    $("heading-name").onkeydown = function (e) { if (e.key === "Enter") $("btn-add-heading").click(); };
 
     var cache = readCache();
     if (cache && cache.pending && cache.links.length) {
