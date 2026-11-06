@@ -185,36 +185,6 @@
     "category": "Health"
   },
   {
-    "title": "Barnoldsiwck Tip",
-    "url": "https://www.lancashire.gov.uk/waste-and-recycling/",
-    "category": "Home / Utilities"
-  },
-  {
-    "title": "BT Broadband",
-    "url": "https://www.BT.com",
-    "category": "Home / Utilities"
-  },
-  {
-    "title": "Lebara Mobiles",
-    "url": "https://www.lebara.co.uk/en/home.html",
-    "category": "Home / Utilities"
-  },
-  {
-    "title": "Octopus Energy",
-    "url": "https://octopus.energy",
-    "category": "Home / Utilities"
-  },
-  {
-    "title": "TV License",
-    "url": "https://www.tvlicensing.co.uk/yourlicense",
-    "category": "Home / Utilities"
-  },
-  {
-    "title": "UU",
-    "url": "https://myaccount.unitedutilities.com/Secure/Authentication/Login",
-    "category": "Home / Utilities"
-  },
-  {
     "title": "Admiral Insurance",
     "url": "https://www.admiral.com",
     "category": "Insurance"
@@ -528,6 +498,36 @@
     "title": "With Locals",
     "url": "https://www.withlocals.com",
     "category": "Travel"
+  },
+  {
+    "title": "Barnoldsiwck Tip",
+    "url": "https://www.lancashire.gov.uk/waste-and-recycling/",
+    "category": "Utilities"
+  },
+  {
+    "title": "BT Broadband",
+    "url": "https://www.BT.com",
+    "category": "Utilities"
+  },
+  {
+    "title": "Lebara Mobiles",
+    "url": "https://www.lebara.co.uk/en/home.html",
+    "category": "Utilities"
+  },
+  {
+    "title": "Octopus Energy",
+    "url": "https://octopus.energy",
+    "category": "Utilities"
+  },
+  {
+    "title": "TV License",
+    "url": "https://www.tvlicensing.co.uk/yourlicense",
+    "category": "Utilities"
+  },
+  {
+    "title": "UU",
+    "url": "https://myaccount.unitedutilities.com/Secure/Authentication/Login",
+    "category": "Utilities"
   },
   {
     "title": "Apple icloud",
