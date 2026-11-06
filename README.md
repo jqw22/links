@@ -35,4 +35,6 @@ browser only (with a **Download backup** option) until a token is added.
 ## Editing
 
 Click **Edit Links** to show the add/delete controls, and **Done Editing** when
-finished. Use **↻ Reload from GitHub** to pull the latest list.
+finished. In edit mode each heading has a **Rename** button; renaming a heading
+moves its links to the new name and saves like any other change. Renaming to an
+existing heading's name merges the two. Headings are listed A to Z. Use **↻ Reload from GitHub** to pull the latest list.

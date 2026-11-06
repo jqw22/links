@@ -38,6 +38,20 @@
   .edit-ui { display: none; }
   body.editing .edit-ui { display: block; }
   .empty-category { color: #999; font-style: italic; font-size: 0.9em; }
+  .rename-btn {
+    margin-left: 8px; padding: 1px 8px; font-size: 0.7em; font-weight: normal; vertical-align: middle;
+    background: #f0f0f0; border: 1px solid #ccc; border-radius: 4px; cursor: pointer; color: #444;
+  }
+  .rename-form { display: flex; gap: 6px; align-items: center; margin: 1.2em 0 0.6em; flex-wrap: wrap; }
+  .rename-form input {
+    flex: 1 1 200px; min-width: 0; padding: 5px 8px; font-size: 0.95em; font-weight: 600;
+    border: 1px solid #4078c0; border-radius: 4px; box-sizing: border-box;
+  }
+  .rename-form button {
+    padding: 5px 12px; font-size: 0.85em; border: 1px solid #ccc; background: #f0f0f0;
+    border-radius: 4px; cursor: pointer;
+  }
+  .rename-form .rename-save { background: #4078c0; color: #fff; border-color: #4078c0; }
 
   /* status banner */
   #status { display: none; font-size: 0.85em; border-radius: 5px; padding: 8px 12px; margin-bottom: 14px; }
@@ -129,10 +143,16 @@
   var CFG_KEY = "links_gh_cfg";
   var CACHE_KEY = "links_cache_v1";
 
+  // Starter headings, only used when there are no links at all yet. Otherwise the headings
+  // come from the categories in links.json, so a rename is saved with the links themselves.
   var CATS = ["Frequent links","Media / Entertainment","Webapps","Nostr","Shopping","Travel","Finance","Banking & Insurance","Gov","Home / Utilities","Photography","Jung","Health"];
 
   // base = the list as last read from / written to GitHub; used to work out local adds/removes
-  var state = { links: [], base: null, sha: null, pending: false };
+  // renames = headings renamed here since base ({old: new}), so links added under the old
+  //           name on another device are moved to the new name when merging
+  // emptyCats = headings emptied this session, kept on screen so links can be added back
+  var state = { links: [], base: null, sha: null, pending: false, renames: {}, emptyCats: [] };
+  var renamingCat = null;
   var statusTimer = null;
 
   /* ------------------------------------------------------------------ utils */
@@ -184,7 +204,7 @@
 
   /* ------------------------------------------------------------ local cache */
   function putCache(links, pending) {
-    try { localStorage.setItem(CACHE_KEY, JSON.stringify({ links: links, base: state.base, pending: !!pending, t: Date.now() })); } catch (e) {}
+    try { localStorage.setItem(CACHE_KEY, JSON.stringify({ links: links, base: state.base, renames: state.renames, pending: !!pending, t: Date.now() })); } catch (e) {}
   }
   function readCache() {
     try {
@@ -270,11 +290,18 @@
   // Three-way merge: apply this browser's changes (local vs base) on top of the
   // latest remote list, so links added/removed on another device are kept.
   // Without a base (e.g. old cached edits) only additions can be known, so it unions.
-  function mergeLinks(remote, base, local) {
+  // Headings renamed here are applied to the result, so remote links under an old name follow it.
+  function mergeLinks(remote, base, local, renames) {
     var localKeys = {}, baseKeys = {}, out = [], seen = {};
+    renames = renames || {};
     local.forEach(function (l) { localKeys[linkKey(l)] = true; });
     (base || []).forEach(function (l) { baseKeys[linkKey(l)] = true; });
-    function add(l) { var k = linkKey(l); if (!seen[k]) { seen[k] = true; out.push(l); } }
+    function add(l) {
+      if (Object.prototype.hasOwnProperty.call(renames, l.category)) {
+        l = { title: l.title, url: l.url, category: renames[l.category] };
+      }
+      var k = linkKey(l); if (!seen[k]) { seen[k] = true; out.push(l); }
+    }
     remote.forEach(function (l) {
       var k = linkKey(l);
       if (base && baseKeys[k] && !localKeys[k]) return; // removed here
@@ -288,9 +315,10 @@
   }
 
   /* -------------------------------------------------------------- load/save */
+  function cmp(a, b) { return a.localeCompare(b, undefined, { sensitivity: "base", numeric: true }); }
   function sortLinks(links) {
     return links.slice().sort(function (a, b) {
-      return a.category.localeCompare(b.category) || a.title.localeCompare(b.title);
+      return cmp(a.category, b.category) || cmp(a.title, b.title);
     });
   }
 
@@ -300,6 +328,7 @@
     }).then(function (r) {
       if (r.missing) { state.links = []; state.base = []; state.sha = null; return { created: true }; }
       state.links = r.links; state.base = r.links.slice(); state.sha = r.sha || null;
+      state.renames = {}; state.emptyCats = [];
       return { raw: !!r.raw, note: r.note };
     });
   }
@@ -338,7 +367,7 @@
       if (e.status === 409 || e.status === 422) {
         // stale/missing sha: the file changed elsewhere → merge our edits into the latest version and retry
         return fetchApi(cfg).then(function (r) {
-          links = sortLinks(mergeLinks(r.missing ? [] : r.links, state.base, state.links));
+          links = sortLinks(mergeLinks(r.missing ? [] : r.links, state.base, state.links, state.renames));
           return putFile(cfg, links, r.missing ? null : r.sha);
         });
       }
@@ -347,6 +376,7 @@
       state.links = links;
       state.base = links.slice();
       state.sha = (out && out.content && out.content.sha) || null;
+      state.renames = {};
       state.pending = false;
       putCache(links, false);
       render();
@@ -370,10 +400,12 @@
   /* ---------------------------------------------------------------- render */
   function editing() { return document.body.classList.contains("editing"); }
 
+  // Headings A to Z: every category used by a link, plus any emptied this session.
   function categoryList() {
-    var list = CATS.slice();
+    var list = state.links.length ? [] : CATS.slice();
     state.links.forEach(function (l) { if (list.indexOf(l.category) < 0) list.push(l.category); });
-    return list;
+    state.emptyCats.forEach(function (c) { if (list.indexOf(c) < 0) list.push(c); });
+    return list.sort(cmp);
   }
 
   function render() {
@@ -389,10 +421,7 @@
     var cont = $("links-container");
     cont.textContent = "";
     cats.forEach(function (ct) {
-      var h = document.createElement("h5");
-      h.id = encodeURIComponent(ct);
-      h.textContent = ct;
-      cont.appendChild(h);
+      cont.appendChild(renamingCat === ct ? renameForm(ct) : heading(ct));
       var cl = byCat[ct] || [];
       if (!cl.length) {
         var p = document.createElement("p");
@@ -427,6 +456,77 @@
     $("count").textContent = state.links.length + " link" + (state.links.length === 1 ? "" : "s");
   }
 
+  function heading(ct) {
+    var h = document.createElement("h5");
+    h.id = encodeURIComponent(ct);
+    h.className = "cat-heading";
+    h.appendChild(document.createTextNode(ct));
+    if (editing()) {
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "rename-btn"; b.textContent = "Rename";
+      b.title = 'Rename "' + ct + '"';
+      b.onclick = function () { renamingCat = ct; render(); };
+      h.appendChild(b);
+    }
+    return h;
+  }
+
+  function renameForm(ct) {
+    var f = document.createElement("div");
+    f.className = "rename-form";
+    f.id = encodeURIComponent(ct);
+    var inp = document.createElement("input");
+    inp.type = "text"; inp.value = ct; inp.setAttribute("aria-label", "New name for " + ct);
+    var ok = document.createElement("button");
+    ok.type = "button"; ok.className = "rename-save"; ok.textContent = "Save";
+    var no = document.createElement("button");
+    no.type = "button"; no.textContent = "Cancel";
+    function cancel() { renamingCat = null; render(); }
+    ok.onclick = function () { renameCategory(ct, inp.value); };
+    no.onclick = cancel;
+    inp.onkeydown = function (e) {
+      if (e.key === "Enter") ok.click();
+      else if (e.key === "Escape") cancel();
+    };
+    f.appendChild(inp); f.appendChild(ok); f.appendChild(no);
+    setTimeout(function () { inp.focus(); inp.select(); }, 0);
+    return f;
+  }
+
+  function renameCategory(from, to) {
+    to = String(to || "").replace(/\s+/g, " ").trim();
+    if (!to) { alert("Please enter a heading name."); return; }
+    renamingCat = null;
+    if (to === from) { render(); return; }
+    var cats = categoryList();
+    if (cats.indexOf(to) >= 0 &&
+        !confirm('There is already a heading called "' + to + '". Move the links from "' + from + '" into it?')) {
+      render(); return;
+    }
+    var moved = 0;
+    state.links = state.links.map(function (l) {
+      if (l.category !== from) return l;
+      moved++;
+      return { title: l.title, url: l.url, category: to };
+    });
+    // keep earlier renames pointing at the newest name, then record this one
+    Object.keys(state.renames).forEach(function (k) { if (state.renames[k] === from) state.renames[k] = to; });
+    state.renames[from] = to;
+    delete state.renames[to];
+    var ei = state.emptyCats.indexOf(from);
+    if (ei >= 0) { state.emptyCats.splice(ei, 1); if (state.emptyCats.indexOf(to) < 0) state.emptyCats.push(to); }
+    if (!moved) {
+      // an empty heading only exists on this page, so there is nothing to save
+      if (state.emptyCats.indexOf(to) < 0) state.emptyCats.push(to);
+      render(); return;
+    }
+    // remove now-duplicate links if two headings were merged
+    var seen = {};
+    state.links = state.links.filter(function (l) { var k = linkKey(l); if (seen[k]) return false; seen[k] = true; return true; });
+    render();
+    commit();
+  }
+
   function addLink(t, u, c) {
     for (var i = 0; i < state.links.length; i++) {
       if (state.links[i].url === u && state.links[i].title === t) { alert("That link is already in the list."); return; }
@@ -439,6 +539,8 @@
     var i = state.links.indexOf(l);
     if (i < 0) return;
     state.links.splice(i, 1);
+    if (!state.links.some(function (x) { return x.category === l.category; }) &&
+        state.emptyCats.indexOf(l.category) < 0) state.emptyCats.push(l.category);
     render();
     commit();
   }
@@ -469,6 +571,7 @@
     $("toggle-edit").onclick = function () {
       document.body.classList.toggle("editing");
       this.textContent = editing() ? "Done Editing" : "Edit Links";
+      renamingCat = null;
       render();
     };
     $("btn-refresh").onclick = reload;
@@ -512,6 +615,7 @@
     if (cache && cache.pending && cache.links.length) {
       state.links = cache.links;
       state.base = Array.isArray(cache.base) ? cache.base : null;
+      state.renames = cache.renames && typeof cache.renames === "object" ? cache.renames : {};
       state.pending = true;
       render();
       setStatus("info", "You have unsaved changes from a previous session (" + cache.links.length + " links).", [
