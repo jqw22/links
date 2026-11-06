@@ -1,35 +1,5 @@
 [
   {
-    "title": "Admiral Insurance",
-    "url": "https://www.admiral.com",
-    "category": "Banking & Insurance"
-  },
-  {
-    "title": "Aviva Insurance",
-    "url": "https://www.aviva.co.uk",
-    "category": "Banking & Insurance"
-  },
-  {
-    "title": "Churchill Insurance",
-    "url": "https://www.churchill.com",
-    "category": "Banking & Insurance"
-  },
-  {
-    "title": "Hire Car Excess Insurance",
-    "url": "https://www.carhireexcess.com",
-    "category": "Banking & Insurance"
-  },
-  {
-    "title": "ripe - Dinghy Insurance",
-    "url": "https://www.ripeinsurance.co.uk/login",
-    "category": "Banking & Insurance"
-  },
-  {
-    "title": "Teachers Pension",
-    "url": "https://www.teacherspensions.co.uk/members/member-login.aspx",
-    "category": "Banking & Insurance"
-  },
-  {
     "title": "Blockchain Site",
     "url": "https://andersbrownworth.com/blockchain",
     "category": "Finance"
@@ -243,6 +213,36 @@
     "title": "UU",
     "url": "https://myaccount.unitedutilities.com/Secure/Authentication/Login",
     "category": "Home / Utilities"
+  },
+  {
+    "title": "Admiral Insurance",
+    "url": "https://www.admiral.com",
+    "category": "Insurance"
+  },
+  {
+    "title": "Aviva Insurance",
+    "url": "https://www.aviva.co.uk",
+    "category": "Insurance"
+  },
+  {
+    "title": "Churchill Insurance",
+    "url": "https://www.churchill.com",
+    "category": "Insurance"
+  },
+  {
+    "title": "Hire Car Excess Insurance",
+    "url": "https://www.carhireexcess.com",
+    "category": "Insurance"
+  },
+  {
+    "title": "ripe - Dinghy Insurance",
+    "url": "https://www.ripeinsurance.co.uk/login",
+    "category": "Insurance"
+  },
+  {
+    "title": "Teachers Pension",
+    "url": "https://www.teacherspensions.co.uk/members/member-login.aspx",
+    "category": "Insurance"
   },
   {
     "title": "Carl Chapman",
