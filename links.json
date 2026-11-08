@@ -105,6 +105,11 @@
     "category": "DevTools"
   },
   {
+    "title": "Claude",
+    "url": "https://claude.ai/new",
+    "category": "DevTools"
+  },
+  {
     "title": "Claude Console",
     "url": "https://platform.claude.com/dashboard",
     "category": "DevTools"
