@@ -130,6 +130,11 @@
     "category": "DevTools"
   },
   {
+    "title": "Netlify",
+    "url": "https://app.netlify.com/teams/jqw22/billing/general",
+    "category": "DevTools"
+  },
+  {
     "title": "Nostr",
     "url": "https://nostr.com",
     "category": "DevTools"
