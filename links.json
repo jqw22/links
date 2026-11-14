@@ -155,6 +155,11 @@
     "category": "DevTools"
   },
   {
+    "title": "Stripe",
+    "url": "https://dashboard.stripe.com/",
+    "category": "DevTools"
+  },
+  {
     "title": "Supabase",
     "url": "https://supabase.com/",
     "category": "DevTools"
